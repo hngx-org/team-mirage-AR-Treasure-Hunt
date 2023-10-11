@@ -1,5 +1,6 @@
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -14,26 +15,29 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -41,79 +45,63 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.shegs.artreasurehunt.navigation.NestedNavItem
 import com.shegs.artreasurehunt.ui.common.CustomRoundedButton
 import com.shegs.artreasurehunt.ui.common.RoundedTextField
+import com.shegs.artreasurehunt.ui.events.SignUpEvents
+import com.shegs.artreasurehunt.ui.events.SignUpUIEvents
+import com.shegs.artreasurehunt.ui.states.SignUpUIState
+import com.shegs.artreasurehunt.viewmodels.NetworkViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @Composable
 fun SignUpScreen(
     navController: NavController,
+    viewModel: NetworkViewModel = hiltViewModel(),
 ) {
-   // val viewModel: SignUpViewModel = hiltViewModel()
+    val state = viewModel.state.collectAsState().value
 
-    // Initialize the error message state
-    var errorMessage by remember { mutableStateOf<String?>(null) }
+    val snackBarHostState = remember {
+        SnackbarHostState()
+    }
 
- //   val signUpResultState = viewModel.signUpResult.collectAsState()
- //   val result = signUpResultState.value // Declare result at a higher level
+    val scope = rememberCoroutineScope()
 
-   // val loadingState = viewModel.loading.collectAsState()
+    LaunchedEffect(key1 = true) {
+        viewModel.event.collectLatest { event ->
+            when (event) {
+                SignUpUIEvents.OnSuccessFulSignUp -> {
+                    navController.navigate(NestedNavItem.ARCameraScreen.route)
+                }
 
-    val context = LocalContext.current
-
-//    LaunchedEffect(result) {
-//        when (result) {
-//            is Result.Success -> {
-//
-//                navController.navigate(com.shegs.artreasurehunt.navigation.NestedNavItem.SignInScreen.route)
-//                errorMessage = null
-//            }
-//            is Result.Error -> {
-//                // Sign-up failed, set the error message
-//                errorMessage = result.message
-//
-//                // Show a Toast for the error message
-//                if (errorMessage != null) {
-//                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//            else -> {
-//                // Clear the error message
-//                errorMessage = null
-//            }
-//        }
-//    }
+                is SignUpUIEvents.showSnackBar -> {
+                    scope.launch { snackBarHostState.showSnackbar(event.message) }
+                }
+            }
+        }
+    }
 
     SignUpScreenContent(
-      //  errorMessage = errorMessage,
-//        onEvent = { event, email,firstName,lastName,password,phoneNumber ->
-//            // Handle SignUpEvents here
-//            when (event) {
-//                SignUpEvents.OnSignUpClicked -> {
-//                    // Call the ViewModel's signUp function when the "Sign Up" button is clicked
-//                    viewModel.signUp(email,firstName,lastName,password,phoneNumber)
-//                }
-//            }
-//        },
         navController = navController,
-
+        state = state,
+        onEvent = viewModel::onEvent
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreenContent(
-   // errorMessage: String?,
-    //onEvent: (SignUpEvents, String, String, String, String, String) -> Unit,
+    state: SignUpUIState,
+    onEvent: (SignUpEvents) -> Unit,
     navController: NavController,
 ) {
 
-    var firstName by remember { mutableStateOf("") }
-    var lastName by remember { mutableStateOf("") }
-    var phoneNumber by remember { mutableStateOf("") }
+    var userName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-
 
 
     val focusManager = LocalFocusManager.current
@@ -126,7 +114,7 @@ fun SignUpScreenContent(
     ) {
         item {
 
-                Column(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(),
@@ -156,66 +144,18 @@ fun SignUpScreenContent(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = "First Name",
+                    text = "User Name",
                     fontWeight = FontWeight(400),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.scrim.copy(0.6f)
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 RoundedTextField(
-                    value = firstName,
-                    label = "First Name",
+                    value = userName,
+                    label = "User Name",
                     icon = Icons.Outlined.Person,
                     modifier = Modifier.fillMaxWidth(),
-                    onValueChange = { firstName = it }
-                )
-            }
-        }
-
-        item {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp),
-                horizontalAlignment = Alignment.Start
-            ) {
-                Text(
-                    text = "Last Name",
-                    fontWeight = FontWeight(400),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.scrim.copy(0.6f)
-                )
-                Spacer(modifier = Modifier.height(6.dp))
-                RoundedTextField(
-                    value = lastName,
-                    label = "Last Name",
-                    icon = Icons.Outlined.Person,
-                    modifier = Modifier.fillMaxWidth(),
-                    onValueChange = { lastName = it }
-                )
-            }
-        }
-
-        item {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp),
-                horizontalAlignment = Alignment.Start
-            ) {
-                Text(
-                    text = "Phone Number",
-                    fontWeight = FontWeight(400),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.scrim.copy(0.6f)
-                )
-                Spacer(modifier = Modifier.height(6.dp))
-                RoundedTextField(
-                    value = phoneNumber,
-                    label = "Phone Number",
-                    icon = Icons.Outlined.Phone,
-                    modifier = Modifier.fillMaxWidth(),
-                    onValueChange = { phoneNumber = it }
+                    onValueChange = { userName = it }
                 )
             }
         }
@@ -266,7 +206,8 @@ fun SignUpScreenContent(
                     onValueChange = { password = it },
                     modifier = Modifier.fillMaxWidth(),
                     label = {
-                        Text(text = "Password",
+                        Text(
+                            text = "Password",
                             fontWeight = FontWeight(400),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.scrim.copy(0.6f)
@@ -308,41 +249,24 @@ fun SignUpScreenContent(
         item {
             CustomRoundedButton(
                 label = "Sign Up",
-                enabled = true,
+                enabled = state.authRequest?.email!!.isNotEmpty() && state.authRequest.password!!.isNotEmpty() && state.authRequest.userName!!.isNotEmpty(),
                 modifier = Modifier
                     .fillMaxWidth(),
                 filled = true
             ) {
-//                onEvent(
-//                    SignUpEvents.OnSignUpClicked,
-//                    email,
-//                    firstName,
-//                    lastName,
-//                    password,
-//                    phoneNumber
-//                )
+                onEvent(
+                    SignUpEvents.OnSignUp
+                )
             }
         }
 
-        // Show circular progress bar when loading is true
-//        if (loading) {
-//            item {
-//                Row (
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(top = 12.dp),
-//                    verticalAlignment = Alignment.CenterVertically,
-//                    horizontalArrangement = Arrangement.Center
-//                ) {
-//                    Box(
-//                        contentAlignment = Alignment.Center,
-//                        modifier = Modifier.size(40.dp)
-//                    ) {
-//                        CircularProgressIndicator()
-//                    }
-//                }
-//
-//            }
-//        }
+        item {
+            if (state.loading) {
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            }
+        }
+
     }
 }
