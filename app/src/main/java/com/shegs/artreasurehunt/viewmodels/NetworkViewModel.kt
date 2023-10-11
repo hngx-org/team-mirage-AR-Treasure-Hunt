@@ -8,7 +8,6 @@ import com.shegs.artreasurehunt.repositories.NetworkRepository
 import com.shegs.artreasurehunt.ui.events.SignUpEvents
 import com.shegs.artreasurehunt.ui.events.SignUpUIEvents
 import com.shegs.artreasurehunt.ui.states.SignUpUIState
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,12 +18,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
 class NetworkViewModel @Inject constructor(
     private val repository: NetworkRepository
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<SignUpUIState>(SignUpUIState())
+    private val _state = MutableStateFlow(SignUpUIState())
     val state = _state.asStateFlow()
 
     private val _event = MutableSharedFlow<SignUpUIEvents>()

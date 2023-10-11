@@ -18,8 +18,9 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideFirebase(@ApplicationContext context: Context){
-        FirebaseApp.initializeApp(context)
+    fun provideFirebase(@ApplicationContext context: Context): FirebaseApp{
+        return FirebaseApp.initializeApp(context) ?: FirebaseApp.getInstance()
+
     }
 
     @Provides

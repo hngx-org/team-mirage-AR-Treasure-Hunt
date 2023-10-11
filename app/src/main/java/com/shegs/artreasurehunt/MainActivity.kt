@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
 
 
     @Inject
-    private lateinit var networkViewModel: NetworkViewModel
+    lateinit var networkViewModel: NetworkViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
