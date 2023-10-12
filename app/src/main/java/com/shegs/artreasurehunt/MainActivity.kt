@@ -22,7 +22,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var networkViewModel: NetworkViewModel
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Initialize Firebase Auth
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
         setContent {
