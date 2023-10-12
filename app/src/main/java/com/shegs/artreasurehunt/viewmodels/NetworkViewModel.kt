@@ -8,7 +8,6 @@ import com.shegs.artreasurehunt.data.repositories.NetworkRepository
 import com.shegs.artreasurehunt.ui.events.SignUpEvents
 import com.shegs.artreasurehunt.ui.events.SignUpUIEvents
 import com.shegs.artreasurehunt.ui.states.SignUpUIState
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -44,12 +43,15 @@ class NetworkViewModel @Inject constructor(
             }
 
             is SignUpEvents.OnUserNameChanged -> {
+                println("sign")
+
                 _state.update {
                     it.copy(userName = event.userName)
                 }
             }
 
             is SignUpEvents.OnSignUp -> {
+                println("sign uppppp")
                 signUp(
                     authRequest = AuthRequest(
                         email = _state.value.email,
@@ -65,8 +67,9 @@ class NetworkViewModel @Inject constructor(
 
     private fun signUp(authRequest: AuthRequest) {
         println("log hereeeeee")
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             repository.signUp(authRequest).onEach { response ->
+                println("response $response")
                 when (response) {
                     is Resource.Success -> {
                         _state.update {
