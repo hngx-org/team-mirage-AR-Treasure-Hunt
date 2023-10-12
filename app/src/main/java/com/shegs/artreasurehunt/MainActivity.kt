@@ -11,9 +11,20 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.FirebaseApp
 import com.shegs.artreasurehunt.ui.theme.ARTreasureHuntTheme
+import com.shegs.artreasurehunt.viewmodels.NetworkViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+
+    @Inject
+    lateinit var networkViewModel: NetworkViewModel
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Initialize Firebase Auth
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
         setContent {
@@ -24,7 +35,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Navigation(navController = navController)
+                    Navigation(
+                        navController = navController,
+                        networkViewModel = networkViewModel
+                    )
                 }
             }
         }

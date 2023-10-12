@@ -76,6 +76,14 @@ dependencies {
     // Firebase and Firestore
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
     implementation("com.google.firebase:firebase-firestore:23.0.1")
+    implementation("com.google.firebase:firebase-auth-ktx")
+
+    //Lifecycle
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.5")
+
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0-alpha03")
+
+
 
     //Analytics
     implementation("com.google.firebase:firebase-analytics-ktx")
