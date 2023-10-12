@@ -65,7 +65,7 @@ fun SignUpScreen(
 //        when (result) {
 //            is Result.Success -> {
 //
-//                navController.navigate(com.shegs.artreasurehunt.navigation.NestedNavItem.SignInScreen.route)
+//                navController.navigate(com.shegs.artreasurehunt.navigation.NestedNavItem.com.shegs.artreasurehunt.ui.SignInScreen.route)
 //                errorMessage = null
 //            }
 //            is Result.Error -> {

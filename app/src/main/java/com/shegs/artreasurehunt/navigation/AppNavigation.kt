@@ -1,10 +1,11 @@
-
+package com.shegs.artreasurehunt.navigation
+import com.shegs.artreasurehunt.ui.SignInScreen
+import SignUpScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.shegs.artreasurehunt.navigation.NestedNavItem
 import com.shegs.artreasurehunt.ui.ARCameraScreen
 
 @Composable
@@ -31,7 +32,7 @@ fun Navigation(
         }
 
         composable(NestedNavItem.ARCameraScreen.route) {
-            ARCameraScreen()
+            ARCameraScreen(navController)
         }
     }
 }

@@ -53,8 +53,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.google.ar.sceneform.rendering.ModelRenderable
 import com.shegs.artreasurehunt.R
+import com.shegs.artreasurehunt.navigation.NavigationDrawer
+import com.shegs.artreasurehunt.navigation.NestedNavItem
 import io.github.sceneview.ar.ARScene
 import io.github.sceneview.ar.node.ArModelNode
 import io.github.sceneview.ar.node.ArNode
@@ -68,47 +71,57 @@ import kotlinx.coroutines.withContext
 
 @SuppressLint("RememberReturnType", "SuspiciousIndentation")
 @Composable
-fun ARCameraScreen() {
+fun ARCameraScreen(navController: NavController) {
     val arModelNodes = remember { mutableStateOf<ArModelNode?>(null) }
     val nodes = remember { mutableListOf<ArNode>() }
     val context = LocalContext.current
 
     val coroutineScope = rememberCoroutineScope()
 
-        ARScene(
-            modifier = Modifier.fillMaxSize(),
-            nodes = nodes,
-            planeRenderer = true,
-            onCreate = { arSceneView ->
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            ARScene(
+                modifier = Modifier,
+                nodes = nodes,
+                planeRenderer = true,
+                onCreate = { arSceneView ->
 
-                // Apply AR configuration here
-                arModelNodes.value =
-                    ArModelNode(arSceneView.engine, PlacementMode.BEST_AVAILABLE).apply {
-                        followHitPosition = true
-                        instantAnchor = false
-                        onHitResult = { arModelNodes, hitResult ->
+                    // Apply AR configuration here
+                    arModelNodes.value =
+                        ArModelNode(arSceneView.engine, PlacementMode.BEST_AVAILABLE).apply {
+                            followHitPosition = true
+                            instantAnchor = false
+                            onHitResult = { arModelNodes, hitResult ->
+
+                            }
+                            scale = Scale(0.1f)
+                            position = Position(x = 0.0f, y = 0.0f, z = -2.0f)
 
                         }
-                        scale = Scale(0.1f)
-                        position = Position(x = 0.0f, y = 0.0f, z = -2.0f)
 
-                    }
+                    nodes.add(arModelNodes.value!!)
+                },
 
-                nodes.add(arModelNodes.value!!)
-            },
-
-            onSessionCreate = { session ->
-                // Configure ARCore session
-            },
-            onFrame = { arFrame ->
-                // Handle AR frame updates
-            },
-            onTap = { hitResult ->
-                // Handle user interactions in AR
-            }
-        )
-
-        AnimatedColumn()
+                onSessionCreate = { session ->
+                    // Configure ARCore session
+                },
+                onFrame = { arFrame ->
+                    // Handle AR frame updates
+                },
+                onTap = { hitResult ->
+                    // Handle user interactions in AR
+                }
+            )
+        }
+        AnimatedColumn(navController)
+        //NavigationDrawer()
+    }
 
     LaunchedEffect(true) {
         // Load and set the 3D model (GLB) for the ArModelNode within a coroutine
@@ -129,14 +142,7 @@ fun ARCameraScreen() {
 @SuppressLint("UnusedContentLambdaTargetStateParameter")
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun AnimatedColumn() {
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Bottom
-    ) {
+fun AnimatedColumn(navController: NavController) {
 
         var isVisible by remember { mutableStateOf(false) }
 
@@ -157,36 +163,43 @@ fun AnimatedColumn() {
             exit = ExitTransition.None
         ) {
 
-            Column(
+            Box(
                 modifier = Modifier
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
             ) {
 
-                Text(
-                    "AR Treasure Hunt",
-                    color = MaterialTheme.colorScheme.onPrimary,
+                Column(
                     modifier = Modifier
-                        .padding(8.dp),
-                    fontSize = 30.sp,
-                    fontFamily = FontFamily(Font(R.font.poppins_black))
-                )
-
-                Button(
-                    onClick = { /* Handle button click */ },
-                    modifier = Modifier.padding(8.dp)
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text("Start Hunting")
-                }
 
-                Button(
-                    onClick = { /* Handle button click */ },
-                    modifier = Modifier.padding(8.dp)
-                ) {
-                    Text("How to hunt")
+                    Text(
+                        "AR Treasure Hunt",
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier
+                            .padding(8.dp),
+                        fontSize = 30.sp,
+                        fontFamily = FontFamily(Font(R.font.poppins_black))
+                    )
+
+                    Button(
+                        onClick = { navController.navigate(NestedNavItem.SignInScreen.route) },
+                        modifier = Modifier.padding(8.dp)
+                    ) {
+                        Text("Start Hunting")
+                    }
+
+                    Button(
+                        onClick = { /* Handle button click */ },
+                        modifier = Modifier.padding(8.dp)
+                    ) {
+                        Text("How to hunt")
+                    }
                 }
             }
         }
-    }
+
 }

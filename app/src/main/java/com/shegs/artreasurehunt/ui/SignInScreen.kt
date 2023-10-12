@@ -1,3 +1,5 @@
+package com.shegs.artreasurehunt.ui
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -189,7 +191,7 @@ fun SignInScreenContent(
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Outlined.Lock,
-                            contentDescription = "confirm password"
+                            contentDescription = "password"
                         )
                     },
                     trailingIcon = {
