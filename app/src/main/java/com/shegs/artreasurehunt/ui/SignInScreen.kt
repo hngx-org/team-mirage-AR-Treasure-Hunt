@@ -1,3 +1,4 @@
+//import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,12 +10,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-//import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,10 +27,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,41 +43,24 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.shegs.artreasurehunt.navigation.NestedNavItem
+import com.shegs.artreasurehunt.data.network.request_and_response_models.AuthRequest
+import com.shegs.artreasurehunt.data.network.request_and_response_models.Resource
 import com.shegs.artreasurehunt.ui.common.CustomRoundedButton
 import com.shegs.artreasurehunt.ui.common.RoundedTextField
+import com.shegs.artreasurehunt.viewmodels.NetworkViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreen(
     navController: NavController,
-//    viewModel: SignInViewModel = hiltViewModel()
+    viewModel: NetworkViewModel = hiltViewModel(),
 ) {
-//    val state = viewModel.state.collectAsState().value
     val snackBarHostState = remember {
         SnackbarHostState()
     }
-    val scope = rememberCoroutineScope()
-
-//    LaunchedEffect(key1 = true) {
-//        viewModel.eventFlow.collectLatest { event ->
-//            when (event) {
-//                SignInUiEvents.OnsuccessfulSignIn -> {
-//                    navController.navigate(com.shegs.artreasurehunt.navigation.NestedNavItem.App.HomeScreen.route) {
-//                        popUpTo(com.shegs.artreasurehunt.navigation.NestedNavItem.App.HomeScreen.route) {
-//                            inclusive = false
-//                        }
-//                    }
-//                }
-//
-//                is SignInUiEvents.ShowSnackBar -> {
-//                    scope.launch { snackBarHostState.showSnackbar(event.message) }
-//                }
-//            }
-//        }
-//    }
     Scaffold(
         snackbarHost = {
             SnackbarHost(snackBarHostState)
@@ -88,7 +73,9 @@ fun SignInScreen(
             modifier = Modifier.padding(
                 top = innerPadding.calculateTopPadding(),
                 bottom = innerPadding.calculateBottomPadding()
-            )
+            ),
+            viewModel = viewModel,
+            snackbarHostState = snackBarHostState
         )
     }
 }
@@ -96,11 +83,20 @@ fun SignInScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreenContent(
-//    state: SignInState,
-//    onEvent: (SignInEvents) -> Unit,
+    viewModel: NetworkViewModel,
     navController: NavController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState
 ) {
+
+    val loginFlow = viewModel.loginFlow.collectAsState().value
+    var email by remember {
+        mutableStateOf("")
+    }
+    var password by remember {
+        mutableStateOf("")
+    }
+
 
     val focusManager = LocalFocusManager.current
     LazyColumn(
@@ -146,12 +142,12 @@ fun SignInScreenContent(
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 RoundedTextField(
-                    value = "",
+                    value = email,
                     label = "Email",
                     icon = Icons.Outlined.Email,
                     modifier = Modifier.fillMaxWidth(),
                     onValueChange = {
-
+                        email = it
                     }
                 )
             }
@@ -175,8 +171,10 @@ fun SignInScreenContent(
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 TextField(
-                    value = "",
-                    onValueChange = { },
+                    value = password,
+                    onValueChange = {
+                        password = it
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     label = {
                         Text(
@@ -231,19 +229,37 @@ fun SignInScreenContent(
                     .padding(top = 30.dp),
                 filled = true,
                 onClick = {
-                    //onEvent(SignInEvents.OnSignIn)
-                    navController.navigate(NestedNavItem.ARCameraScreen.route)
+                    val authRequest = AuthRequest(
+                        email = email, password = password
+                    )
+                    viewModel.login(authRequest)
                 }
             )
         }
 
-//        item {
-//            if (state.loading) {
-//                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-//                    CircularProgressIndicator()
-//                }
-//            }
-//        }
+        item {
+            loginFlow.let {
+                when (it) {
+                    is Resource.Error -> {
+                        LaunchedEffect(key1 = true) {
+                            snackbarHostState.showSnackbar("login error")
+                        }
+                    }
+
+                    Resource.Loading -> {
+                        CircularProgressIndicator()
+                    }
+
+                    is Resource.Success -> {
+                        LaunchedEffect(key1 = true) {
+                            snackbarHostState.showSnackbar("login successful")
+                        }
+                    }
+
+                    null -> TODO()
+                }
+            }
+        }
 
     }
 }

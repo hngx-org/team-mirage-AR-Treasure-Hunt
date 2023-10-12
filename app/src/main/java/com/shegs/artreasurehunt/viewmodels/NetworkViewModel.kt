@@ -16,7 +16,9 @@ class NetworkViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _signUpFlow = MutableStateFlow<Resource<FirebaseUser>?>(null)
+    private val _loginFlow = MutableStateFlow<Resource<FirebaseUser>?>(null)
     val signUpFlow: StateFlow<Resource<FirebaseUser>?> = _signUpFlow
+    val loginFlow: StateFlow<Resource<FirebaseUser>?> = _loginFlow
 
 
 
@@ -25,6 +27,15 @@ class NetworkViewModel @Inject constructor(
             _signUpFlow.value = Resource.Loading
            val result =  repository.signUp(authRequest)
             _signUpFlow.value = result
+        }
+
+    }
+
+    fun login(authRequest: AuthRequest) {
+        viewModelScope.launch {
+            _loginFlow.value = Resource.Loading
+           val result =  repository.login(authRequest)
+            _loginFlow.value = result
         }
 
     }
