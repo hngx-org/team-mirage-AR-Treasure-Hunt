@@ -8,8 +8,6 @@ import com.shegs.artreasurehunt.data.models.User
 import com.shegs.artreasurehunt.data.network.request_and_response_models.AuthRequest
 import com.shegs.artreasurehunt.data.network.request_and_response_models.Resource
 import com.shegs.artreasurehunt.data.utils.await
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class NetworkRepository @Inject constructor(
@@ -49,19 +47,18 @@ class NetworkRepository @Inject constructor(
         }
     }
 
-    suspend fun login(authRequest: AuthRequest): Flow<Resource<FirebaseUser>> {
-        return flow {
-            emit(Resource.Loading)
-            try {
+    suspend fun login(authRequest: AuthRequest): Resource<FirebaseUser> {
+
+            Resource.Loading
+            return try {
                 val result =
                     firebaseAuth.signInWithEmailAndPassword(authRequest.email, authRequest.password)
                         .await()
-                emit(Resource.Success(result.user))
+                Resource.Success(result.user)
             } catch (e: Exception) {
                 e.printStackTrace()
-                emit(Resource.Error(e.message!!))
+                Resource.Error(e.message!!)
             }
         }
-    }
 
 }

@@ -20,7 +20,7 @@ class NetworkViewModel @Inject constructor(
 
 
 
-    private fun signUp(authRequest: AuthRequest) {
+     fun signUp(authRequest: AuthRequest) {
         viewModelScope.launch {
             _signUpFlow.value = Resource.Loading
            val result =  repository.signUp(authRequest)

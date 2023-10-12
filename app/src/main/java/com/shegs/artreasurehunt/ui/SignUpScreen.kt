@@ -1,5 +1,4 @@
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -46,57 +45,52 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.shegs.artreasurehunt.data.network.request_and_response_models.AuthRequest
+import com.shegs.artreasurehunt.data.network.request_and_response_models.Resource
 import com.shegs.artreasurehunt.navigation.NestedNavItem
 import com.shegs.artreasurehunt.ui.common.CustomRoundedButton
 import com.shegs.artreasurehunt.ui.common.RoundedTextField
-import com.shegs.artreasurehunt.ui.events.SignUpEvents
-import com.shegs.artreasurehunt.ui.events.SignUpUIEvents
-import com.shegs.artreasurehunt.ui.states.SignUpUIState
 import com.shegs.artreasurehunt.viewmodels.NetworkViewModel
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @Composable
 fun SignUpScreen(
     navController: NavController,
     viewModel: NetworkViewModel = hiltViewModel(),
 ) {
-    val state = viewModel.state.collectAsState().value
-
     val snackBarHostState = remember {
         SnackbarHostState()
     }
 
     val scope = rememberCoroutineScope()
 
-    LaunchedEffect(key1 = true) {
-        viewModel.event.collectLatest { event ->
-            when (event) {
-                SignUpUIEvents.OnSuccessFulSignUp -> {
-                    navController.navigate(NestedNavItem.ARCameraScreen.route)
-                }
 
-                is SignUpUIEvents.showSnackBar -> {
-                    scope.launch { snackBarHostState.showSnackbar(event.message) }
-                }
-            }
-        }
-    }
 
     SignUpScreenContent(
         navController = navController,
-        state = state,
-        onEvent = viewModel::onEvent
+        viewModel = viewModel,
+        snackbarHostState = snackBarHostState
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreenContent(
-    state: SignUpUIState,
-    onEvent: (SignUpEvents) -> Unit,
     navController: NavController,
+    viewModel: NetworkViewModel,
+    snackbarHostState: SnackbarHostState,
 ) {
+
+    var userName by remember {
+        mutableStateOf("")
+    }
+    var email by remember {
+        mutableStateOf("")
+    }
+    var password by remember {
+        mutableStateOf("")
+    }
+
+    val singUpFlow = viewModel.signUpFlow.collectAsState().value
 
 
     val focusManager = LocalFocusManager.current
@@ -146,11 +140,11 @@ fun SignUpScreenContent(
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 RoundedTextField(
-                    value = state.userName,
+                    value = userName,
                     label = "User Name",
                     icon = Icons.Outlined.Person,
                     modifier = Modifier.fillMaxWidth(),
-                    onValueChange = { onEvent(SignUpEvents.OnUserNameChanged(it)) }
+                    onValueChange = { userName = it }
                 )
             }
         }
@@ -170,11 +164,11 @@ fun SignUpScreenContent(
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 RoundedTextField(
-                    value = state.email,
+                    value = email,
                     label = "Email",
                     icon = Icons.Outlined.Email,
                     modifier = Modifier.fillMaxWidth(),
-                    onValueChange = { onEvent(SignUpEvents.OnEmailChanged(it)) }
+                    onValueChange = { email = it }
                 )
             }
         }
@@ -197,8 +191,8 @@ fun SignUpScreenContent(
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 TextField(
-                    value = state.password,
-                    onValueChange = { onEvent(SignUpEvents.OnPasswordChanged(it)) },
+                    value = password,
+                    onValueChange = { password = it },
                     modifier = Modifier.fillMaxWidth(),
                     label = {
                         Text(
@@ -244,28 +238,45 @@ fun SignUpScreenContent(
         item {
             CustomRoundedButton(
                 label = "Sign Up",
-                enabled = true,
+                enabled = email.isNotEmpty() && password.isNotEmpty() && userName.isNotEmpty(),
                 modifier = Modifier
                     .fillMaxWidth(),
                 filled = true,
                 onClick = {
-                    println(state.email)
-                    println(state.password)
-                    println(state.userName)
-                    onEvent(
-                        SignUpEvents.OnSignUp
+                    val authRequest = AuthRequest(
+                        email = email,
+                        password = password,
+                        userName = userName,
                     )
+                    viewModel.signUp(authRequest = authRequest)
 
                 })
         }
 
         item {
-            if (state.loading) {
-                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
+            singUpFlow.let {
+                when (it) {
+                    is Resource.Error -> {
+                        LaunchedEffect(Unit) {
+                            snackbarHostState.showSnackbar("an error occured")
+                        }
+                    }
+
+                    is Resource.Loading -> {
+                        CircularProgressIndicator()
+                    }
+
+                    is Resource.Success -> {
+                        navController.navigate(NestedNavItem.SignInScreen.route)
+                        LaunchedEffect(Unit) {
+                            snackbarHostState.showSnackbar("sign up successful")
+                        }
+                    }
+
+                    else -> {}
                 }
+
             }
         }
-
     }
 }
