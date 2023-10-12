@@ -1,9 +1,13 @@
 package com.shegs.artreasurehunt.di.modules
 
+import android.app.Application
 import android.content.Context
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.shegs.artreasurehunt.data.repositories.LocationRepository
 import com.shegs.artreasurehunt.data.repositories.NetworkRepository
 import dagger.Module
 import dagger.Provides
@@ -42,6 +46,25 @@ object AppModule {
         firestore: FirebaseFirestore
     ): NetworkRepository {
         return NetworkRepository(firebaseAuth = firebaseAuth, firestore = firestore)
+    }
+
+    @Provides
+    @Singleton
+    fun providesFusedLocationProviderClient(
+        application: Application
+    ): FusedLocationProviderClient =
+        LocationServices.getFusedLocationProviderClient(application)
+
+    @Provides
+    @Singleton
+    fun providesLocationRepository(
+        fusedLocationProviderClient: FusedLocationProviderClient,
+        application: Application
+    ): LocationRepository {
+        return LocationRepository(
+            fusedLocationProviderClient = fusedLocationProviderClient,
+            application = application
+        )
     }
 
 //    @Provides
