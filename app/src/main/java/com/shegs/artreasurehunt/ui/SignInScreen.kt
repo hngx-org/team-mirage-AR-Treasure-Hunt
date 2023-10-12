@@ -1,7 +1,10 @@
 //import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,18 +38,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.shegs.artreasurehunt.data.network.request_and_response_models.AuthRequest
 import com.shegs.artreasurehunt.data.network.request_and_response_models.Resource
+import com.shegs.artreasurehunt.navigation.NestedNavItem
 import com.shegs.artreasurehunt.ui.common.CustomRoundedButton
 import com.shegs.artreasurehunt.ui.common.RoundedTextField
 import com.shegs.artreasurehunt.viewmodels.NetworkViewModel
@@ -160,7 +167,7 @@ fun SignInScreenContent(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 20.dp),
+                    .padding(top = 16.dp, bottom = 40.dp),
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
@@ -172,9 +179,7 @@ fun SignInScreenContent(
                 Spacer(modifier = Modifier.height(6.dp))
                 TextField(
                     value = password,
-                    onValueChange = {
-                        password = it
-                    },
+                    onValueChange = { password = it },
                     modifier = Modifier.fillMaxWidth(),
                     label = {
                         Text(
@@ -185,10 +190,7 @@ fun SignInScreenContent(
                         )
                     },
                     leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Outlined.Lock,
-                            contentDescription = "confirm password"
-                        )
+                        Icon(imageVector = Icons.Outlined.Lock, contentDescription = null)
                     },
                     trailingIcon = {
                         val icon =
@@ -204,8 +206,8 @@ fun SignInScreenContent(
                         imeAction = ImeAction.Done
                     ),
                     keyboardActions = KeyboardActions(
-                        onDone = {
-                            focusManager.clearFocus()
+                        onNext = {
+                            focusManager.moveFocus(FocusDirection.Next)
                         }
                     ),
                     colors = TextFieldDefaults.textFieldColors(
@@ -220,10 +222,11 @@ fun SignInScreenContent(
             }
         }
 
+
         item {
             CustomRoundedButton(
                 label = "Sign In",
-                enabled = true,
+                enabled = email.isNotEmpty() && password.isNotEmpty(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 30.dp),
@@ -238,25 +241,64 @@ fun SignInScreenContent(
         }
 
         item {
+            Spacer(modifier = Modifier.padding(top = 10.dp))
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                ) {
+                    Text(
+                        text = "Don't have an account?",
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight(200),
+                            color = Color(0xFF000000),
+                        )
+                    )
+                    Spacer(modifier = Modifier.padding(horizontal = 2.dp))
+                    Text(
+                        text = "Register",
+                        modifier = Modifier.clickable {
+                            navController.navigate(NestedNavItem.SignUpScreen.route)
+                        },
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight(500),
+                            color = Color(0xFF000000),
+                        )
+                    )
+                }
+            }
+        }
+
+        item {
             loginFlow.let {
                 when (it) {
                     is Resource.Error -> {
-                        LaunchedEffect(key1 = true) {
+                        LaunchedEffect(snackbarHostState) {
                             snackbarHostState.showSnackbar("login error")
                         }
                     }
 
                     Resource.Loading -> {
-                        CircularProgressIndicator()
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
                     }
 
                     is Resource.Success -> {
-                        LaunchedEffect(key1 = true) {
+                        LaunchedEffect(snackbarHostState) {
                             snackbarHostState.showSnackbar("login successful")
                         }
                     }
 
-                    null -> TODO()
+                    else -> {
+                    }
                 }
             }
         }

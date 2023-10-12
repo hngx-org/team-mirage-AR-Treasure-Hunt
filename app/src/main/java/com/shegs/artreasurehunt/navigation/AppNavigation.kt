@@ -29,7 +29,7 @@ fun Navigation(
         }
 
         composable(NestedNavItem.SignInScreen.route) {
-            SignInScreen(navController)
+            SignInScreen(navController, viewModel = networkViewModel)
         }
 
         composable(NestedNavItem.ARCameraScreen.route) {
