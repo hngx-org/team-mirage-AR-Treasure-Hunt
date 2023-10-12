@@ -4,7 +4,7 @@ import android.content.Context
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.shegs.artreasurehunt.network.services.ARTreasureHuntService
+import com.shegs.artreasurehunt.data.repositories.NetworkRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,26 +18,35 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideFirebase(@ApplicationContext context: Context): FirebaseApp{
+    fun provideFirebase(@ApplicationContext context: Context): FirebaseApp {
         return FirebaseApp.initializeApp(context) ?: FirebaseApp.getInstance()
 
     }
 
     @Provides
     @Singleton
-    fun provideFireStore(firebaseApp: FirebaseApp):FirebaseFirestore{
+    fun provideFireStore(firebaseApp: FirebaseApp): FirebaseFirestore {
         return FirebaseFirestore.getInstance(firebaseApp)
     }
 
     @Provides
     @Singleton
-    fun provideFirebaseAuth(firebaseApp: FirebaseApp):FirebaseAuth{
+    fun provideFirebaseAuth(firebaseApp: FirebaseApp): FirebaseAuth {
         return FirebaseAuth.getInstance(firebaseApp)
     }
 
     @Provides
     @Singleton
-    fun provideARTreasureHuntService(firebaseAuth: FirebaseAuth, firebaseFirestore: FirebaseFirestore) : ARTreasureHuntService{
-        return ARTreasureHuntService(firebaseAuth = firebaseAuth, firestore = firebaseFirestore)
+    fun provideNetworkRepository(
+        firebaseAuth: FirebaseAuth,
+        firestore: FirebaseFirestore
+    ): NetworkRepository {
+        return NetworkRepository(firebaseAuth = firebaseAuth, firestore = firestore)
     }
+
+//    @Provides
+//    @Singleton
+//    fun provideARTreasureHuntService(firebaseAuth: FirebaseAuth, firebaseFirestore: FirebaseFirestore) : ARTreasureHuntService {
+//        return ARTreasureHuntService(firebaseAuth = firebaseAuth, firestore = firebaseFirestore)
+//    }
 }

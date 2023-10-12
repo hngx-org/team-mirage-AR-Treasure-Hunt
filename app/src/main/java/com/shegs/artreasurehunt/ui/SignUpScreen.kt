@@ -1,4 +1,3 @@
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -99,10 +98,6 @@ fun SignUpScreenContent(
     navController: NavController,
 ) {
 
-    var userName by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-
 
     val focusManager = LocalFocusManager.current
     LazyColumn(
@@ -151,11 +146,11 @@ fun SignUpScreenContent(
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 RoundedTextField(
-                    value = userName,
+                    value = state.userName,
                     label = "User Name",
                     icon = Icons.Outlined.Person,
                     modifier = Modifier.fillMaxWidth(),
-                    onValueChange = { userName = it }
+                    onValueChange = { onEvent(SignUpEvents.OnUserNameChanged(it)) }
                 )
             }
         }
@@ -175,11 +170,11 @@ fun SignUpScreenContent(
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 RoundedTextField(
-                    value = email,
+                    value = state.email,
                     label = "Email",
                     icon = Icons.Outlined.Email,
                     modifier = Modifier.fillMaxWidth(),
-                    onValueChange = { email = it }
+                    onValueChange = { onEvent(SignUpEvents.OnEmailChanged(it)) }
                 )
             }
         }
@@ -202,8 +197,8 @@ fun SignUpScreenContent(
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 TextField(
-                    value = password,
-                    onValueChange = { password = it },
+                    value = state.password,
+                    onValueChange = { onEvent(SignUpEvents.OnPasswordChanged(it)) },
                     modifier = Modifier.fillMaxWidth(),
                     label = {
                         Text(
@@ -249,15 +244,19 @@ fun SignUpScreenContent(
         item {
             CustomRoundedButton(
                 label = "Sign Up",
-                enabled = state.authRequest?.email!!.isNotEmpty() && state.authRequest.password!!.isNotEmpty() && state.authRequest.userName!!.isNotEmpty(),
+                enabled = true,
                 modifier = Modifier
                     .fillMaxWidth(),
-                filled = true
-            ) {
-                onEvent(
-                    SignUpEvents.OnSignUp
-                )
-            }
+                filled = true,
+                onClick = {
+                    println(state.email)
+                    println(state.password)
+                    println(state.userName)
+                    onEvent(
+                        SignUpEvents.OnSignUp
+                    )
+
+                })
         }
 
         item {

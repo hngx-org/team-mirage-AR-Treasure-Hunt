@@ -1,11 +1,11 @@
-package com.shegs.artreasurehunt.network.services
+package com.shegs.artreasurehunt.data.network.services
 
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.shegs.artreasurehunt.data.models.User
-import com.shegs.artreasurehunt.network.request_and_response_models.AuthRequest
-import com.shegs.artreasurehunt.network.request_and_response_models.Resource
+import com.shegs.artreasurehunt.data.network.request_and_response_models.AuthRequest
+import com.shegs.artreasurehunt.data.network.request_and_response_models.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
@@ -20,21 +20,22 @@ class ARTreasureHuntService @Inject constructor(
         return flow {
             emit(Resource.Loading)
             try {
-                val authRequest = AuthRequest(
+                val request = AuthRequest(
                     email = authRequest.email,
                     password = authRequest.password,
                     userName = authRequest.userName,
                 )
+                println(request)
                 val authResult =
                     firebaseAuth.createUserWithEmailAndPassword(
-                        authRequest.email!!,
-                        authRequest.password!!
+                        request.email!!,
+                        request.password!!
                     )
                 if (authResult.isSuccessful) {
                     val user = authRequest.userName?.let {
                         User(
                             id = authResult.result.user!!.uid,
-                            email = authRequest.email,
+                            email = request.email,
                             userName = it
                         )
                     }

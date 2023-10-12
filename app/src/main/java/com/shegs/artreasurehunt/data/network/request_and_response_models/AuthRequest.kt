@@ -1,9 +1,9 @@
-package com.shegs.artreasurehunt.network.request_and_response_models
+package com.shegs.artreasurehunt.data.network.request_and_response_models
 
 data class AuthRequest(
-    val email: String? = "",
-    val password: String? = "",
-    val userName:String? = "",
+    val email: String = "",
+    val password: String = "",
+    val userName:String = "",
     val lat: Double? = 0.0,
     val lng: Double? = 0.0,
 )

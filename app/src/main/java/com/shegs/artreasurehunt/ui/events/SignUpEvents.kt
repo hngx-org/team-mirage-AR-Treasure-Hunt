@@ -1,6 +1,6 @@
 package com.shegs.artreasurehunt.ui.events
 
-import com.shegs.artreasurehunt.network.request_and_response_models.AuthRequest
+import com.shegs.artreasurehunt.data.network.request_and_response_models.AuthRequest
 
 sealed interface SignUpEvents {
     data class OnEmailChanged(val email: String) : SignUpEvents

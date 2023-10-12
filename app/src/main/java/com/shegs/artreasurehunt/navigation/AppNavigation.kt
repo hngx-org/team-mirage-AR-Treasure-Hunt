@@ -16,7 +16,7 @@ fun Navigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = NestedNavItem.SignInScreen.route,
+        startDestination = NestedNavItem.SignUpScreen.route,
         modifier = modifier
     ) {
 
