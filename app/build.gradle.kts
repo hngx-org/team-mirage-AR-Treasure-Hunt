@@ -6,10 +6,17 @@ plugins {
     id("com.google.gms.google-services")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
+//
+//val localProperties = Properties()
+//localProperties.load(java.io.FileInputStream(rootProject.file("local.properties")))
+//var googleMapsApiKey: String = localProperties.getProperty("GOOGLE_MAPS_API_KEY")
+//
+
 
 android {
     namespace = "com.shegs.artreasurehunt"
     compileSdk = 34
+
 
     defaultConfig {
         applicationId = "com.shegs.artreasurehunt"
@@ -22,6 +29,9 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+//        manifestPlaceholders = [
+//            googleMapsApiKey: GOOGLE_MAPS_API_KEY]
     }
 
     buildTypes {
@@ -78,7 +88,7 @@ dependencies {
     implementation ("com.google.android.gms:play-services-maps:18.1.0")
     implementation ("com.google.android.gms:play-services-location:21.0.1")
     // Google maps for compose
-    implementation ("com.google.maps.android:maps-compose:2.8.0")
+    implementation ("com.google.maps.android:maps-compose:2.9.0")
 
     // KTX for the Maps SDK for Android
     implementation ("com.google.maps.android:maps-ktx:3.2.1")
