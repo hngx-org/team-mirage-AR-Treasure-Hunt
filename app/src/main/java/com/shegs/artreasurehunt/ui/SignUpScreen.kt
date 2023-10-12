@@ -105,7 +105,7 @@ fun SignUpScreenContent(
         mutableStateOf("")
     }
 
-    val singUpFlow = viewModel.signUpFlow.collectAsState().value
+    val signUpFlow = viewModel.signUpFlow.collectAsState().value
 
 
     val focusManager = LocalFocusManager.current
@@ -302,7 +302,7 @@ fun SignUpScreenContent(
         }
 
         item {
-            singUpFlow.let {
+            signUpFlow.let {
                 when (it) {
                     is Resource.Error -> {
                         LaunchedEffect(snackbarHostState) {

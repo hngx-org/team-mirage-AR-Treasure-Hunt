@@ -35,6 +35,7 @@ class NetworkRepository @Inject constructor(
 
                     )
                 firestore.collection("users").document(result.user!!.uid).set(userData).await()
+
                 Resource.Success(result.user)
 
             } else {
@@ -43,6 +44,7 @@ class NetworkRepository @Inject constructor(
         } catch (e: Exception) {
             println("error ${e.message}")
             Log.e("ERRORS", e.message!!)
+            firestore.terminate()
             Resource.Error(e.message!!)
         }
     }

@@ -7,4 +7,6 @@ sealed class NestedNavItem(val route: String, val label: String? = null, val ico
     object SignInScreen : NestedNavItem(route = "sign_in_screen")
     object ARCameraScreen : NestedNavItem(route = "ar_screen")
     object SignUpScreen : NestedNavItem(route = "sign_up_screen")
+
+    object MapScreen : NestedNavItem(route = "map_screen")
 }

@@ -186,7 +186,7 @@ fun AnimatedColumn(navController: NavController) {
                     )
 
                     Button(
-                        onClick = { navController.navigate(NestedNavItem.SignInScreen.route) },
+                        onClick = { navController.navigate(NestedNavItem.MapScreen.route) },
                         modifier = Modifier.padding(8.dp)
                     ) {
                         Text("Start Hunting")

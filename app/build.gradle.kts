@@ -4,6 +4,7 @@ plugins {
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
     id("com.google.gms.google-services")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -62,7 +63,6 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    implementation("com.google.android.gms:play-services-maps:18.1.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -71,17 +71,29 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    // Need this or MapEffect throws exception.
+    implementation ("androidx.appcompat:appcompat:1.5.1")
+
+    // Google maps
+    implementation ("com.google.android.gms:play-services-maps:18.1.0")
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
+    // Google maps for compose
+    implementation ("com.google.maps.android:maps-compose:2.8.0")
+
+    // KTX for the Maps SDK for Android
+    implementation ("com.google.maps.android:maps-ktx:3.2.1")
+    // KTX for the Maps SDK for Android Utility Library
+    implementation ("com.google.maps.android:maps-utils-ktx:3.2.1")
+
     // Firebase and Firestore
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
     implementation("com.google.firebase:firebase-firestore:23.0.1")
     implementation("com.google.firebase:firebase-auth-ktx")
 
-    //Lifecycle
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.5")
-
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0-alpha03")
 
 
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0-alpha02")
 
     //Analytics
     implementation("com.google.firebase:firebase-analytics-ktx")
@@ -91,14 +103,13 @@ dependencies {
     implementation ("io.github.sceneview:arsceneview:0.10.2")
 
     //Google maps
-    implementation ("com.google.android.gms:play-services-maps:17.0.1")
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
 
     // GMS - Google Mobile Services
     implementation("com.google.android.gms:play-services-location:21.0.1")
 
     // Permissions
     implementation("com.google.accompanist:accompanist-permissions:0.31.1-alpha")
-
 
     //Lifecycle
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.5")
