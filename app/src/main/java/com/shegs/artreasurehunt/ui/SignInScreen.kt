@@ -51,6 +51,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.shegs.artreasurehunt.data.network.request_and_response_models.AuthRequest
 import com.shegs.artreasurehunt.data.network.request_and_response_models.Resource
 import com.shegs.artreasurehunt.navigation.NestedNavItem
@@ -87,7 +89,7 @@ fun SignInScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun SignInScreenContent(
     viewModel: NetworkViewModel,
@@ -95,6 +97,22 @@ fun SignInScreenContent(
     modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState
 ) {
+
+    val locationPermissions = rememberMultiplePermissionsState(
+        permissions = listOf(
+            android.Manifest.permission.ACCESS_COARSE_LOCATION,
+            android.Manifest.permission.ACCESS_FINE_LOCATION
+        )
+    )
+
+
+    LaunchedEffect(key1 = locationPermissions.allPermissionsGranted) {
+        locationPermissions.launchMultiplePermissionRequest()
+        if (locationPermissions.allPermissionsGranted) {
+            println("location granted")
+            viewModel.getCurrentLocation()
+        }
+    }
 
     val loginFlow = viewModel.loginFlow.collectAsState().value
     var email by remember {
@@ -293,6 +311,7 @@ fun SignInScreenContent(
 
                     is Resource.Success -> {
                         LaunchedEffect(snackbarHostState) {
+                            navController.navigate(NestedNavItem.ARCameraScreen.route)
                             snackbarHostState.showSnackbar("login successful")
                         }
                     }
@@ -302,6 +321,41 @@ fun SignInScreenContent(
                 }
             }
         }
+
+//        item {
+//            if(isGranted){
+//
+//            }
+//            Box(
+//                modifier = Modifier.fillMaxSize(),
+//                contentAlignment = Alignment.Center
+//            ) {
+//                AnimatedContent(
+//                    targetState = locationPermissions.allPermissionsGranted, label = ""
+//                ) { areGranted ->
+//                    Column(
+//                        horizontalAlignment = Alignment.CenterHorizontally,
+//                        verticalArrangement = Arrangement.spacedBy(10.dp)
+//                    ) {
+//                        if (areGranted) {
+//                            Text(text = "${currentLocation?.latitude ?: 0.0} ${currentLocation?.longitude ?: 0.0}")
+//                            Button(
+//                                onClick = { viewModel.getCurrentLocation() }
+//                            ) {
+//                                Text(text = "Get current location")
+//                            }
+//                        } else {
+//                            Text(text = "We need location permissions for this application.")
+//                            Button(
+//                                onClick = {  }
+//                            ) {
+//                                Text(text = "Accept")
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
     }
 }

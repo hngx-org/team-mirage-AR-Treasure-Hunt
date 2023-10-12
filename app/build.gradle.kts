@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -94,6 +92,13 @@ dependencies {
 
     //Google maps
     implementation ("com.google.android.gms:play-services-maps:17.0.1")
+
+    // GMS - Google Mobile Services
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+
+    // Permissions
+    implementation("com.google.accompanist:accompanist-permissions:0.31.1-alpha")
+
 
     //Lifecycle
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.5")
