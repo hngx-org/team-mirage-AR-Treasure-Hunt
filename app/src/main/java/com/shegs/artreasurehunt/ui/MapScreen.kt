@@ -47,9 +47,6 @@ fun MapScreen(
             val scope = rememberCoroutineScope()
             val userLocation = state.lastKnownLocation
 
-            println("longitude: ${userLocation?.longitude}")
-            println("longitude: ${userLocation?.latitude}")
-
             MapEffect(state.clusterItems) { map ->
                 if (state.clusterItems.isNotEmpty()) {
                     val clusterManager = setupClusterManager(context, map)
