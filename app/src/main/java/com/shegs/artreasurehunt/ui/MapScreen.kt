@@ -5,6 +5,7 @@ import android.location.Location
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -77,10 +78,7 @@ fun MapScreen(
             // So you can use clusters as an alternative to markers.
             MarkerInfoWindow(
                 state = rememberMarkerState(
-                    position = LatLng(
-                        userLocation?.latitude ?: 0.0,
-                        userLocation?.longitude ?: 0.0
-                    )
+                    position = LatLng(6.5407611, 3.3881081)
                 ),
                 snippet = "user location: ${userLocation?.latitude}, ${userLocation?.longitude}",
                 onClick = {

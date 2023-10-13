@@ -21,9 +21,21 @@ import com.shegs.artreasurehunt.ui.clusters.getCenterOfPolygon
 import com.shegs.artreasurehunt.ui.states.MapState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlin.math.cos
 
 @HiltViewModel
 class MapViewModel @Inject constructor() : ViewModel() {
+
+    // Base coordinate
+    val baseLatitude = 6.5407611
+    val baseLongitude = 3.3881081
+
+    // Desired polygon width (in kilometers)
+    val desiredWidthKm = 0.4167
+
+    // Calculate latitude and longitude offsets (degrees)
+    val degreesLatitude = (desiredWidthKm / 40075) * 360
+    val degreesLongitude = (desiredWidthKm / (40075 * cos(Math.toRadians(baseLatitude)))) * 360
 
     val state: MutableState<MapState> = mutableStateOf(
         MapState(
@@ -34,10 +46,10 @@ class MapViewModel @Inject constructor() : ViewModel() {
                     title = "Zone 1",
                     snippet = "This is Zone 1.",
                     polygonOptions = polygonOptions {
-                        add(LatLng(49.105, -122.524))
-                        add(LatLng(49.101, -122.529))
-                        add(LatLng(49.092, -122.501))
-                        add(LatLng(49.1, -122.506))
+                        add(LatLng(baseLatitude + degreesLatitude, baseLongitude - degreesLongitude))
+                        add(LatLng(baseLatitude + degreesLatitude, baseLongitude + degreesLongitude))
+                        add(LatLng(baseLatitude - degreesLatitude, baseLongitude + degreesLongitude))
+                        add(LatLng(baseLatitude - degreesLatitude, baseLongitude - degreesLongitude))
                         fillColor(POLYGON_FILL_COLOR)
                     }
                 ),
@@ -46,10 +58,10 @@ class MapViewModel @Inject constructor() : ViewModel() {
                     title = "Zone 2",
                     snippet = "This is Zone 2.",
                     polygonOptions = polygonOptions {
-                        add(LatLng(49.110, -122.554))
-                        add(LatLng(49.107, -122.559))
-                        add(LatLng(49.103, -122.551))
-                        add(LatLng(49.112, -122.549))
+                        add(LatLng(6.5407611, 3.3881081))
+                        add(LatLng(6.5447611, 3.3891081))
+                        add(LatLng(6.5427611, 3.3861081))
+                        add(LatLng(6.5487611, 3.3871081))
                         fillColor(POLYGON_FILL_COLOR)
                     }
                 )

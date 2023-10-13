@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -59,18 +60,20 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-    private fun askPermissions() = when {
-        ContextCompat.checkSelfPermission(
-            this,
-            ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED -> {
+    private fun askPermissions() {
+        if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             viewModel.getDeviceLocation(
                 fusedLocationProviderClient,
                 locationCallback,
             )
-        }
-        else -> {
-            requestPermissionLauncher.launch(ACCESS_FINE_LOCATION)
+        } else {
+            // Check for permission and request if needed
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_FINE_LOCATION)) {
+                // Explain why you need the permission (optional) and then request it
+            } else {
+                // Request the permission
+                requestPermissionLauncher.launch(ACCESS_FINE_LOCATION)
+            }
         }
     }
 
