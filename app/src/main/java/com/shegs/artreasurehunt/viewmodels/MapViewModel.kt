@@ -7,6 +7,8 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
@@ -56,25 +58,42 @@ class MapViewModel @Inject constructor(): ViewModel() {
 
     @SuppressLint("MissingPermission")
     fun getDeviceLocation(
-        fusedLocationProviderClient: FusedLocationProviderClient
+        fusedLocationProviderClient: FusedLocationProviderClient,
+        locationCallback: LocationCallback
     ) {
-        /*
-         * Get the best and most recent location of the device, which may be null in rare
-         * cases when a location is not available.
-         */
+        val locationRequest = LocationRequest.create().apply {
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
+
         try {
-            val locationResult = fusedLocationProviderClient.lastLocation
-            locationResult.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    state.value = state.value.copy(
-                        lastKnownLocation = task.result,
-                    )
-                }
-            }
+            fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null)
         } catch (e: SecurityException) {
-            // Show error or something
+            // Handle location permission issues (e.g., show an error message or request permissions)
         }
     }
+
+
+//    @SuppressLint("MissingPermission")
+//    fun getDeviceLocation(
+//        fusedLocationProviderClient: FusedLocationProviderClient
+//    ) {
+//        /*
+//         * Get the best and most recent location of the device, which may be null in rare
+//         * cases when a location is not available.
+//         */
+//        try {
+//            val locationResult = fusedLocationProviderClient.lastLocation
+//            locationResult.addOnCompleteListener { task ->
+//                if (task.isSuccessful) {
+//                    state.value = state.value.copy(
+//                        lastKnownLocation = task.result,
+//                    )
+//                }
+//            }
+//        } catch (e: SecurityException) {
+//            // Show error or something
+//        }
+//    }
 
     fun setupClusterManager(
         context: Context,
