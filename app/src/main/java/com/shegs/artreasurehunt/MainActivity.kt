@@ -5,7 +5,6 @@ package com.shegs.artreasurehunt
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -37,9 +36,11 @@ class MainActivity : ComponentActivity() {
         override fun onLocationResult(locationResult: LocationResult) {
             // Handle updated location data
             val lastLocation = locationResult.lastLocation
-            Log.d("LAST LOCATION", lastLocation?.longitude.toString())
+            println("latitude $lastLocation")
+//            println("longitude ${lastLocation.longitude}")
             Toast.makeText(applicationContext,"${lastLocation?.latitude}",Toast.LENGTH_LONG).show()
             // Update your UI or perform other actions with the location data
+
         }
 
         override fun onLocationAvailability(locationAvailability: LocationAvailability) {
@@ -61,7 +62,10 @@ class MainActivity : ComponentActivity() {
             this,
             ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED -> {
-            viewModel.getDeviceLocation(fusedLocationProviderClient, locationCallback)
+            viewModel.getDeviceLocation(
+                fusedLocationProviderClient,
+                locationCallback,
+            )
         }
         else -> {
             requestPermissionLauncher.launch(ACCESS_FINE_LOCATION)

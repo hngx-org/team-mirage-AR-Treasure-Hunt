@@ -3,6 +3,7 @@ package com.shegs.artreasurehunt.viewmodels
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
+import android.os.Looper
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -22,7 +23,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class MapViewModel @Inject constructor(): ViewModel() {
+class MapViewModel @Inject constructor() : ViewModel() {
 
     val state: MutableState<MapState> = mutableStateOf(
         MapState(
@@ -59,14 +60,18 @@ class MapViewModel @Inject constructor(): ViewModel() {
     @SuppressLint("MissingPermission")
     fun getDeviceLocation(
         fusedLocationProviderClient: FusedLocationProviderClient,
-        locationCallback: LocationCallback
+        locationCallback: LocationCallback,
     ) {
         val locationRequest = LocationRequest.create().apply {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
 
         try {
-            fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null)
+            fusedLocationProviderClient.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                Looper.getMainLooper()
+            )
         } catch (e: SecurityException) {
             // Handle location permission issues (e.g., show an error message or request permissions)
         }
@@ -110,7 +115,6 @@ class MapViewModel @Inject constructor(): ViewModel() {
             .map { it.points.map { LatLng(it.latitude, it.longitude) } }.flatten()
         return latLngs.calculateCameraViewPoints().getCenterOfPolygon()
     }
-
 
 
     companion object {
