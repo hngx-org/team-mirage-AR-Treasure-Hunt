@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
@@ -29,6 +30,7 @@ fun MapScreen(
     setupClusterManager: (Context, GoogleMap) -> ZoneClusterManager,
     calculateZoneViewCenter: () -> LatLngBounds,
 ) {
+
     // Set properties using MapProperties which you can use to recompose the map
     val mapProperties = MapProperties(
         // Only enable if user has accepted location permissions.
@@ -79,14 +81,14 @@ fun MapScreen(
             MarkerInfoWindow(
                 state = rememberMarkerState(
                     position = LatLng(
-                        userLocation!!.latitude,
-                        userLocation.longitude
+                        userLocation?.latitude ?: 0.0,
+                        userLocation?.longitude ?: 0.0
                     )
                 ),
-                snippet = "user location: ${userLocation.latitude}, ${userLocation.longitude}",
+                snippet = "user location: ${userLocation?.latitude}, ${userLocation?.longitude}",
                 onClick = {
                     // This won't work :(
-                    println("Mitchs_: Cannot be clicked")
+                    println("Shegs : Cannot be clicked")
                     true
                 },
                 draggable = true
