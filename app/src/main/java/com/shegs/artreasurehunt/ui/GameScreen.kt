@@ -1,15 +1,26 @@
 package com.shegs.artreasurehunt.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import com.google.android.gms.location.FusedLocationProviderClient
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
@@ -23,13 +34,111 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 import com.shegs.artreasurehunt.ui.clusters.ZoneClusterManager
 import com.shegs.artreasurehunt.ui.states.MapState
+import com.shegs.artreasurehunt.viewmodels.MapViewModel
+import io.github.sceneview.ar.ARScene
+import io.github.sceneview.ar.node.ArModelNode
+import io.github.sceneview.ar.node.ArNode
+import io.github.sceneview.ar.node.PlacementMode
+import io.github.sceneview.math.Position
+import io.github.sceneview.math.Scale
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
+
+@Composable
+fun GameScreen() {
+    val viewModel: MapViewModel = viewModel()
+
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        ARCameraScreen(
+            modifier = Modifier
+                .weight(1f)
+        )
+        MapScreen(
+            state = viewModel.state.value,
+            setupClusterManager = viewModel::setupClusterManager,
+            calculateZoneViewCenter = viewModel::calculateZoneLatLngBounds,
+            modifier = Modifier
+                .weight(1f)
+        )
+    }
+}
+
+@SuppressLint("RememberReturnType", "SuspiciousIndentation")
+@Composable
+fun ARCameraScreen(modifier: Modifier) {
+    val arModelNodes = remember { mutableStateOf<ArModelNode?>(null) }
+    val nodes = remember { mutableListOf<ArNode>() }
+    val context = LocalContext.current
+
+    val coroutineScope = rememberCoroutineScope()
+
+    Column(
+       modifier = Modifier
+           .height(500.dp)
+           .fillMaxWidth()
+    ) {
+
+    ARScene(
+        modifier = Modifier,
+        nodes = nodes,
+        planeRenderer = true,
+        onCreate = { arSceneView ->
+
+            // Apply AR configuration here
+            arModelNodes.value =
+                ArModelNode(arSceneView.engine, PlacementMode.BEST_AVAILABLE).apply {
+                    followHitPosition = true
+                    instantAnchor = false
+                    onHitResult = { arModelNodes, hitResult ->
+
+                    }
+                    scale = Scale(0.1f)
+                    position = Position(x = 0.0f, y = 0.0f, z = -2.0f)
+
+                }
+
+            nodes.add(arModelNodes.value!!)
+        },
+
+        onSessionCreate = { session ->
+            // Configure ARCore session
+        },
+        onFrame = { arFrame ->
+            // Handle AR frame updates
+        },
+        onTap = { hitResult ->
+            // Handle user interactions in AR
+        }
+    )
+    //AnimatedColumn(navController)
+    //NavigationDrawer()
+}
+
+    LaunchedEffect(true) {
+        // Load and set the 3D model (GLB) for the ArModelNode within a coroutine
+        val modelNode = arModelNodes.value
+        if (modelNode != null) {
+            withContext(Dispatchers.IO) {
+                modelNode.loadModelGlb(
+                    context = context,
+                    glbFileLocation = "file:///android_asset/treasure_chest.glb",
+                    autoAnimate = true
+                )
+            }
+        }
+    }
+}
 
 @Composable
 fun MapScreen(
     state: MapState,
     setupClusterManager: (Context, GoogleMap) -> ZoneClusterManager,
     calculateZoneViewCenter: () -> LatLngBounds,
+    modifier: Modifier
 ) {
 
     // Set properties using MapProperties which you can use to recompose the map
@@ -38,11 +147,13 @@ fun MapScreen(
         isMyLocationEnabled = state.lastKnownLocation != null,
     )
     val cameraPositionState = rememberCameraPositionState()
-    Box(
-        modifier = Modifier.fillMaxSize()
+
+    Column(
+        modifier = Modifier
+            .height(500.dp)
+            .fillMaxWidth()
     ) {
         GoogleMap(
-            modifier = Modifier.fillMaxSize(),
             properties = mapProperties,
             cameraPositionState = cameraPositionState
         ) {

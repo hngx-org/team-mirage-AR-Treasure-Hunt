@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.shegs.artreasurehunt.R
 import com.shegs.artreasurehunt.ui.ARCameraScreen
+import com.shegs.artreasurehunt.ui.GameScreen
 import com.shegs.artreasurehunt.ui.MapScreen
 import com.shegs.artreasurehunt.ui.VideoPlayer
 import com.shegs.artreasurehunt.viewmodels.MapViewModel
@@ -50,9 +51,13 @@ fun Navigation(
             //ARCameraScreen(navController)
         }
 
-        composable(NestedNavItem.MapScreen.route) {
-            val viewModel: MapViewModel = viewModel()
-            MapScreen(state = viewModel.state.value, setupClusterManager = viewModel::setupClusterManager, calculateZoneViewCenter = viewModel::calculateZoneLatLngBounds)
+        composable(NestedNavItem.GameScreen.route){
+            GameScreen()
         }
+
+        //composable(NestedNavItem.MapScreen.route) {
+            //val viewModel: MapViewModel = viewModel()
+            //MapScreen(state = viewModel.state.value, setupClusterManager = viewModel::setupClusterManager, calculateZoneViewCenter = viewModel::calculateZoneLatLngBounds)
+        //}
     }
 }

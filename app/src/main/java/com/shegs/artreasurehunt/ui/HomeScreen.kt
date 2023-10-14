@@ -12,12 +12,12 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,11 +27,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.Font
@@ -42,7 +40,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
-import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.SimpleExoPlayer
@@ -60,77 +57,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
-
-@SuppressLint("RememberReturnType", "SuspiciousIndentation")
-@Composable
-fun ARCameraScreen(navController: NavController) {
-    val arModelNodes = remember { mutableStateOf<ArModelNode?>(null) }
-    val nodes = remember { mutableListOf<ArNode>() }
-    val context = LocalContext.current
-
-    val coroutineScope = rememberCoroutineScope()
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
-
-
-            ARScene(
-                modifier = Modifier,
-                nodes = nodes,
-                planeRenderer = true,
-                onCreate = { arSceneView ->
-
-                    // Apply AR configuration here
-                    arModelNodes.value =
-                        ArModelNode(arSceneView.engine, PlacementMode.BEST_AVAILABLE).apply {
-                            followHitPosition = true
-                            instantAnchor = false
-                            onHitResult = { arModelNodes, hitResult ->
-
-                            }
-                            scale = Scale(0.1f)
-                            position = Position(x = 0.0f, y = 0.0f, z = -2.0f)
-
-                        }
-
-                    nodes.add(arModelNodes.value!!)
-                },
-
-                onSessionCreate = { session ->
-                    // Configure ARCore session
-                },
-                onFrame = { arFrame ->
-                    // Handle AR frame updates
-                },
-                onTap = { hitResult ->
-                    // Handle user interactions in AR
-                }
-            )
-        }
-        AnimatedColumn(navController)
-        //NavigationDrawer()
-    }
-
-    LaunchedEffect(true) {
-        // Load and set the 3D model (GLB) for the ArModelNode within a coroutine
-        val modelNode = arModelNodes.value
-        if (modelNode != null) {
-            withContext(Dispatchers.IO) {
-                modelNode.loadModelGlb(
-                    context = context,
-                    glbFileLocation = "file:///android_asset/treasure_chest.glb",
-                    autoAnimate = true
-                )
-            }
-        }
-    }
-}
 
 
 @SuppressLint("UnusedContentLambdaTargetStateParameter")
@@ -180,7 +106,7 @@ fun AnimatedColumn(navController: NavController) {
                     )
 
                     Button(
-                        onClick = { navController.navigate(NestedNavItem.MapScreen.route) },
+                        onClick = { navController.navigate(NestedNavItem.GameScreen.route) },
                         modifier = Modifier.padding(8.dp)
                     ) {
                         Text("Start Hunting")
@@ -229,7 +155,9 @@ fun VideoPlayer(@RawRes videoRawResource: Int, navController: NavController) {
                     useController = false // Hide playback controls and seek bar
                 }
             },
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .height(IntrinsicSize.Max)
         )
         AnimatedColumn(navController)
     }
