@@ -8,8 +8,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.shegs.artreasurehunt.R
 import com.shegs.artreasurehunt.ui.ARCameraScreen
 import com.shegs.artreasurehunt.ui.MapScreen
+import com.shegs.artreasurehunt.ui.VideoPlayer
 import com.shegs.artreasurehunt.viewmodels.MapViewModel
 import com.shegs.artreasurehunt.viewmodels.NetworkViewModel
 
@@ -44,7 +46,8 @@ fun Navigation(
         }
 
         composable(NestedNavItem.ARCameraScreen.route) {
-            ARCameraScreen(navController)
+            VideoPlayer(R.raw.treasure_video, navController)
+            //ARCameraScreen(navController)
         }
 
         composable(NestedNavItem.MapScreen.route) {

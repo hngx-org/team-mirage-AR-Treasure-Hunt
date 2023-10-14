@@ -21,21 +21,11 @@ import com.shegs.artreasurehunt.ui.clusters.getCenterOfPolygon
 import com.shegs.artreasurehunt.ui.states.MapState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlin.math.cos
 
 @HiltViewModel
 class MapViewModel @Inject constructor() : ViewModel() {
 
-    // Base coordinate
-    val baseLatitude = 6.5407611
-    val baseLongitude = 3.3881081
 
-    // Desired polygon width (in kilometers)
-    val desiredWidthKm = 0.4167
-
-    // Calculate latitude and longitude offsets (degrees)
-    val degreesLatitude = (desiredWidthKm / 40075) * 360
-    val degreesLongitude = (desiredWidthKm / (40075 * cos(Math.toRadians(baseLatitude)))) * 360
 
     val state: MutableState<MapState> = mutableStateOf(
         MapState(
@@ -43,20 +33,20 @@ class MapViewModel @Inject constructor() : ViewModel() {
             clusterItems = listOf(
                 ZoneClusterItem(
                     id = "zone-1",
-                    title = "Zone 1",
-                    snippet = "This is Zone 1.",
+                    title = "Starhkz Island",
+                    snippet = "This island will show you shege",
                     polygonOptions = polygonOptions {
-                        add(LatLng(baseLatitude + degreesLatitude, baseLongitude - degreesLongitude))
-                        add(LatLng(baseLatitude + degreesLatitude, baseLongitude + degreesLongitude))
-                        add(LatLng(baseLatitude - degreesLatitude, baseLongitude + degreesLongitude))
-                        add(LatLng(baseLatitude - degreesLatitude, baseLongitude - degreesLongitude))
+                        add(LatLng(6.5407611, 3.3881081))
+                        add(LatLng(6.5447611, 3.3861081))
+                        add(LatLng(6.5427611, 3.3891081))
+                        add(LatLng(6.5387611, 3.3871081))
                         fillColor(POLYGON_FILL_COLOR)
                     }
                 ),
                 ZoneClusterItem(
                     id = "zone-2",
-                    title = "Zone 2",
-                    snippet = "This is Zone 2.",
+                    title = "Phelickz Island",
+                    snippet = "Find the gold treasure to win",
                     polygonOptions = polygonOptions {
                         add(LatLng(6.5407611, 3.3881081))
                         add(LatLng(6.5447611, 3.3891081))
