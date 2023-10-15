@@ -4,6 +4,6 @@ import android.location.Location
 import com.shegs.artreasurehunt.ui.clusters.ZoneClusterItem
 
 data class MapState(
-    val lastKnownLocation: Location?,
+    //val lastKnownLocation: Location?,
     val clusterItems: List<ZoneClusterItem>,
 )
