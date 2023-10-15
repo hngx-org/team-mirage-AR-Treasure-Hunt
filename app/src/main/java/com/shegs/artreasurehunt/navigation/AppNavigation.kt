@@ -5,12 +5,14 @@ import SignUpScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.shegs.artreasurehunt.ui.HomeScreen
 import com.shegs.artreasurehunt.ui.GameScreen
+import com.shegs.artreasurehunt.ui.HomeScreen
 import com.shegs.artreasurehunt.ui.getVideoUri
+import com.shegs.artreasurehunt.viewmodels.MapViewModel
 import com.shegs.artreasurehunt.viewmodels.NetworkViewModel
 
 
@@ -50,13 +52,19 @@ fun Navigation(
             //ARCameraScreen(navController)
         }
 
-        composable(NestedNavItem.GameScreen.route){
-            GameScreen()
-        }
+//        composable(NestedNavItem.GameScreen.route){
+//            GameScreen()
+//        }
 
-        //composable(NestedNavItem.MapScreen.route) {
-            //val viewModel: MapViewModel = viewModel()
-            //MapScreen(state = viewModel.state.value, setupClusterManager = viewModel::setupClusterManager, calculateZoneViewCenter = viewModel::calculateZoneLatLngBounds)
-        //}
+        composable(NestedNavItem.GameScreen.route) {
+            val viewModel: MapViewModel = viewModel()
+            GameScreen()
+//            MapScreen(
+//                modifier = modifier,
+//                state = viewModel.state.value,
+//                setupClusterManager = viewModel::setupClusterManager,
+//                calculateZoneViewCenter = viewModel::calculateZoneLatLngBounds,
+//            )
+        }
     }
 }

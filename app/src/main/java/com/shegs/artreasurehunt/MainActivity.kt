@@ -1,12 +1,9 @@
 package com.shegs.artreasurehunt
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.content.Context
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -19,11 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.LocationAvailability
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
@@ -89,6 +83,7 @@ class MainActivity : ComponentActivity() {
     lateinit var networkViewModel: NetworkViewModel
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         // Initialize Firebase Auth
         super.onCreate(savedInstanceState)
@@ -106,7 +101,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     Navigation(
                         navController = navController,
-                        networkViewModel = networkViewModel
+                        networkViewModel = networkViewModel,
                     )
                 }
             }
