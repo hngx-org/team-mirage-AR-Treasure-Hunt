@@ -3,6 +3,7 @@ package com.shegs.artreasurehunt.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
+import android.media.MediaPlayer
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,6 +34,7 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MarkerInfoWindow
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
+import com.shegs.artreasurehunt.R
 import com.shegs.artreasurehunt.ui.clusters.ZoneClusterManager
 import com.shegs.artreasurehunt.ui.states.MapState
 import com.shegs.artreasurehunt.viewmodels.MapViewModel
@@ -49,6 +52,21 @@ import kotlinx.coroutines.withContext
 @Composable
 fun GameScreen() {
     val viewModel: MapViewModel = viewModel()
+
+    val context = LocalContext.current
+    val mediaPlayer: MediaPlayer =  MediaPlayer.create(context, R.raw.adventure)
+
+    // Start playing audio when the composable is first composed
+    DisposableEffect(Unit) {
+        mediaPlayer.isLooping = true // Set to true for looping
+        mediaPlayer.start()
+
+        onDispose {
+            // Stop the audio when the composable is removed from the screen
+            mediaPlayer.stop()
+            mediaPlayer.release()
+        }
+    }
 
     Column(
         modifier = Modifier.fillMaxSize()
