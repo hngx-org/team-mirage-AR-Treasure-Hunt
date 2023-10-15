@@ -4,12 +4,13 @@ import SignInScreen
 import SignUpScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.shegs.artreasurehunt.R
+import com.shegs.artreasurehunt.ui.HomeScreen
 import com.shegs.artreasurehunt.ui.GameScreen
-import com.shegs.artreasurehunt.ui.VideoPlayer
+import com.shegs.artreasurehunt.ui.getVideoUri
 import com.shegs.artreasurehunt.viewmodels.NetworkViewModel
 
 
@@ -43,7 +44,9 @@ fun Navigation(
         }
 
         composable(NestedNavItem.HomeScreen.route) {
-            VideoPlayer(R.raw.jo, navController)
+            val context = LocalContext.current
+            val videoUri = getVideoUri(context)
+            HomeScreen(navController, videoUri)
             //ARCameraScreen(navController)
         }
 
