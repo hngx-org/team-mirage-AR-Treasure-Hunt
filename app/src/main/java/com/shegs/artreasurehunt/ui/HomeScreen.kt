@@ -2,6 +2,7 @@ package com.shegs.artreasurehunt.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.media.MediaPlayer
 import android.net.Uri
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout
@@ -66,12 +67,12 @@ private fun Context.buildPlayerView(exoPlayer: ExoPlayer) =
 fun getVideoUri(context: Context): Uri {
     val packageName = context.packageName
     val resources = context.resources
-    val rawId = resources.getIdentifier("juj", "raw", packageName)
+    val rawId = resources.getIdentifier("background_video", "raw", packageName)
     val videoUri = "android.resource://$packageName/$rawId"
     return Uri.parse(videoUri)
 }
 
-@SuppressLint("UnusedContentLambdaTargetStateParameter")
+@SuppressLint("UnusedContentLambdaTargetStateParameter", "RememberReturnType")
 @Composable
 fun HomeScreen(navController: NavController, videoUri: Uri) {
 
@@ -79,6 +80,7 @@ fun HomeScreen(navController: NavController, videoUri: Uri) {
     val passwordFocusRequester = FocusRequester()
     val focusManager = LocalFocusManager.current
     val exoPlayer = remember { context.buildExoPlayer(videoUri) }
+    val mediaPlayer: MediaPlayer =  MediaPlayer.create(context, R.raw.home_music)
 
     DisposableEffect(
         AndroidView(
@@ -88,6 +90,18 @@ fun HomeScreen(navController: NavController, videoUri: Uri) {
     ) {
         onDispose {
             exoPlayer.release()
+        }
+    }
+
+    // Start playing audio when the composable is first composed
+    DisposableEffect(Unit) {
+        mediaPlayer.isLooping = true // Set to true for looping
+        mediaPlayer.start()
+
+        onDispose {
+            // Stop the audio when the composable is removed from the screen
+            mediaPlayer.stop()
+            mediaPlayer.release()
         }
     }
 
