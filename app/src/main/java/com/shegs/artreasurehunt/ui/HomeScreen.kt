@@ -9,10 +9,12 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,6 +32,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.Font
@@ -47,82 +50,8 @@ import androidx.media3.ui.PlayerView
 import androidx.navigation.NavController
 import com.shegs.artreasurehunt.R
 import com.shegs.artreasurehunt.navigation.NestedNavItem
-import io.github.sceneview.ar.ARScene
-import io.github.sceneview.ar.node.ArModelNode
-import io.github.sceneview.ar.node.ArNode
-import io.github.sceneview.ar.node.PlacementMode
-import io.github.sceneview.math.Position
-import io.github.sceneview.math.Scale
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
 
-
-
-@SuppressLint("UnusedContentLambdaTargetStateParameter")
-@OptIn(ExperimentalAnimationApi::class)
-@Composable
-fun AnimatedColumn(navController: NavController) {
-
-        var isVisible by remember { mutableStateOf(false) }
-
-        LaunchedEffect(isVisible) {
-            if (!isVisible) {
-                // Delay to allow initial slide-in animation
-                delay(1000) // Adjust the delay time as needed
-                isVisible = true
-            }
-        }
-
-        AnimatedVisibility(
-            visible = isVisible,
-            enter = slideInVertically(
-                initialOffsetY = { it },
-                animationSpec = tween(2000, easing = LinearEasing)
-            ),
-            exit = ExitTransition.None
-        ) {
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-
-                    Text(
-                        "AR Treasure Hunt",
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier
-                            .padding(8.dp),
-                        fontSize = 30.sp,
-                        fontFamily = FontFamily(Font(R.font.poppins_black))
-                    )
-
-                    Button(
-                        onClick = { navController.navigate(NestedNavItem.GameScreen.route) },
-                        modifier = Modifier.padding(8.dp)
-                    ) {
-                        Text("Start Hunting")
-                    }
-
-                    Button(
-                        onClick = { /* Handle button click */ },
-                        modifier = Modifier.padding(8.dp)
-                    ) {
-                        Text("How to hunt")
-                    }
-                }
-            }
-        }
-
-}
 
 
 @SuppressLint("UnsafeOptInUsageError")
@@ -146,8 +75,10 @@ fun VideoPlayer(@RawRes videoRawResource: Int, navController: NavController) {
     val playerView = PlayerView(context)
     Box(
         modifier = Modifier
-            .fillMaxSize(),
-        contentAlignment = Alignment.Center) {
+            .fillMaxHeight()
+            .fillMaxWidth()
+            .background(Color.Green),
+    ) {
         AndroidView(
             factory = { context ->
                 PlayerView(context).apply {
@@ -157,7 +88,6 @@ fun VideoPlayer(@RawRes videoRawResource: Int, navController: NavController) {
             },
             modifier = Modifier
                 .fillMaxSize()
-                .height(IntrinsicSize.Max)
         )
         AnimatedColumn(navController)
     }
@@ -193,4 +123,68 @@ fun VideoPlayer(@RawRes videoRawResource: Int, navController: NavController) {
             lifecycle.removeObserver(observer)
         }
     }
+}
+
+@SuppressLint("UnusedContentLambdaTargetStateParameter")
+@Composable
+fun AnimatedColumn(navController: NavController) {
+
+    var isVisible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(isVisible) {
+        if (!isVisible) {
+            // Delay to allow initial slide-in animation
+            delay(1000) // Adjust the delay time as needed
+            isVisible = true
+        }
+    }
+
+    AnimatedVisibility(
+        visible = isVisible,
+        enter = slideInVertically(
+            initialOffsetY = { it },
+            animationSpec = tween(2000, easing = LinearEasing)
+        ),
+        exit = ExitTransition.None
+    ) {
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                Text(
+                    "AR Treasure Hunt",
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier
+                        .padding(8.dp),
+                    fontSize = 30.sp,
+                    fontFamily = FontFamily(Font(R.font.poppins_black))
+                )
+
+                Button(
+                    onClick = { navController.navigate(NestedNavItem.GameScreen.route) },
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Text("Start Hunting")
+                }
+
+                Button(
+                    onClick = { /* Handle button click */ },
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Text("How to hunt")
+                }
+            }
+        }
+    }
+
 }

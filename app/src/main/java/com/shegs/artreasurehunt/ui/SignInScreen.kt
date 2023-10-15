@@ -311,7 +311,7 @@ fun SignInScreenContent(
 
                     is Resource.Success -> {
                         LaunchedEffect(snackbarHostState) {
-                            navController.navigate(NestedNavItem.ARCameraScreen.route)
+                            navController.navigate(NestedNavItem.HomeScreen.route)
                             snackbarHostState.showSnackbar("login successful")
                         }
                     }
