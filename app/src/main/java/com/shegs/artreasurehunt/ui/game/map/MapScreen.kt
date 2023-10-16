@@ -3,7 +3,6 @@ package com.shegs.artreasurehunt.ui.game.map
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
@@ -80,7 +79,7 @@ fun MapScreen(
             val scope = rememberCoroutineScope()
 
             val geofence = geofenceHelper.getGeofence(
-                "YourGeofenceID",
+                "MY_GEOFENCE",
                 LatLng(currentPosition.latitude, currentPosition.latitude),
                 100.0f,
                 Geofence.GEOFENCE_TRANSITION_ENTER
