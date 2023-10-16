@@ -36,7 +36,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.shegs.artreasurehunt.ui.ARCameraScreen
 import kotlinx.coroutines.launch
 
 val items = listOf(

@@ -98,22 +98,6 @@ fun SignInScreenContent(
     snackbarHostState: SnackbarHostState
 ) {
 
-    val locationPermissions = rememberMultiplePermissionsState(
-        permissions = listOf(
-            android.Manifest.permission.ACCESS_COARSE_LOCATION,
-            android.Manifest.permission.ACCESS_FINE_LOCATION
-        )
-    )
-
-
-    LaunchedEffect(key1 = locationPermissions.allPermissionsGranted) {
-        locationPermissions.launchMultiplePermissionRequest()
-        if (locationPermissions.allPermissionsGranted) {
-            println("location granted")
-            viewModel.getCurrentLocation()
-        }
-    }
-
     val loginFlow = viewModel.loginFlow.collectAsState().value
     var email by remember {
         mutableStateOf("")

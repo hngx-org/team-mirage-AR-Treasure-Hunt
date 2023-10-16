@@ -51,19 +51,19 @@ object AppModule {
     @Provides
     @Singleton
     fun providesFusedLocationProviderClient(
-        application: Application
+        @ApplicationContext context: Context
     ): FusedLocationProviderClient =
-        LocationServices.getFusedLocationProviderClient(application)
+        LocationServices.getFusedLocationProviderClient(context)
 
     @Provides
     @Singleton
     fun providesLocationRepository(
         fusedLocationProviderClient: FusedLocationProviderClient,
-        application: Application
+        @ApplicationContext context: Context
     ): LocationRepository {
         return LocationRepository(
             fusedLocationProviderClient = fusedLocationProviderClient,
-            application = application
+            context = context
         )
     }
 
