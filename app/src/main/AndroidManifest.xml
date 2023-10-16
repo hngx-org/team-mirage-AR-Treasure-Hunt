@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -24,6 +25,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ARTreasureHunt"
         tools:targetApi="31">
+        <receiver android:name=".receivers.ARTreasureHuntBroadcastReceiver"/>
         <meta-data
             android:name="com.google.ar.core"
             android:value="required"

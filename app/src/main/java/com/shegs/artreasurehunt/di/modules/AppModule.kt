@@ -3,10 +3,12 @@ package com.shegs.artreasurehunt.di.modules
 import android.app.Application
 import android.content.Context
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+//import com.shegs.artreasurehunt.data.repositories.GeofencingRepository
 import com.shegs.artreasurehunt.data.repositories.LocationRepository
 import com.shegs.artreasurehunt.data.repositories.NetworkRepository
 import dagger.Module
@@ -19,6 +21,19 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+
+    @Provides
+    @Singleton
+    fun provideGeofencingClient(application: Application): GeofencingClient {
+        return LocationServices.getGeofencingClient(application)
+    }
+
+//    @Provides
+//    @Singleton
+//    fun provideGeofencingRepository(geofencingClient: GeofencingClient): GeofencingRepository {
+//      //  return GeofencingRepository(geofencingClient)
+//    }
 
     @Provides
     @Singleton
