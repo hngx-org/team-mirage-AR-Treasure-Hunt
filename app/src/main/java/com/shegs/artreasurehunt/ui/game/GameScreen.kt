@@ -1,12 +1,18 @@
 package com.shegs.artreasurehunt.ui.game
 
 import android.media.MediaPlayer
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.shegs.artreasurehunt.R
@@ -36,7 +42,13 @@ fun GameScreen() {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        ARCameraScreen(modifier = Modifier.weight(1f))
-        MapView(mapViewModel = mapViewModel, context = context, modifier = Modifier.weight(1f))
+        ARCameraScreen(
+            modifier = Modifier
+                .weight(1f)
+        )
+        MapView(
+            mapViewModel = mapViewModel, context = context,
+            modifier = Modifier.weight(1f)
+        )
     }
 }

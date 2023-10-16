@@ -2,6 +2,7 @@ package com.shegs.artreasurehunt.ui.game.ar
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
@@ -33,7 +34,7 @@ fun ARCameraScreen(modifier: Modifier) {
 
     Column(
         modifier = modifier
-            .height(500.dp)
+            .height(0.dp)
             .fillMaxWidth()
     ) {
 

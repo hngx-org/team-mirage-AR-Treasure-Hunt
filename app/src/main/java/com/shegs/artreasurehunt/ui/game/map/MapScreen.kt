@@ -3,6 +3,7 @@ package com.shegs.artreasurehunt.ui.game.map
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
@@ -58,7 +59,7 @@ fun MapScreen(
 
     Column(
         modifier = Modifier
-            .height(500.dp)
+            .height(300.dp)
             .fillMaxWidth()
     ) {
         GoogleMap(
