@@ -33,51 +33,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val locationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult) {
-            // Handle updated location data
-            val lastLocation = locationResult.lastLocation
-            Log.d("lastlocation",lastLocation!!.latitude.toString())
-            Toast.makeText(applicationContext,"${lastLocation.latitude}",Toast.LENGTH_LONG).show()
-            // Update your UI or perform other actions with the location data
-
-        }
-
-        override fun onLocationAvailability(locationAvailability: LocationAvailability) {
-            Toast.makeText(applicationContext,"${locationAvailability.isLocationAvailable}",Toast.LENGTH_LONG).show()
-
-            // Handle changes in location availability (e.g., if the location provider is disabled)
-        }
-    }
-
-    private val requestPermissionLauncher =
-        registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            if (isGranted) {
-                viewModel.getDeviceLocation(fusedLocationProviderClient, locationCallback)
-            }
-        }
-
-    private fun askPermissions() {
-        if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            viewModel.getDeviceLocation(
-                fusedLocationProviderClient,
-                locationCallback,
-            )
-        } else {
-            // Check for permission and request if needed
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_FINE_LOCATION)) {
-                // Explain why you need the permission (optional) and then request it
-            } else {
-                // Request the permission
-                requestPermissionLauncher.launch(ACCESS_FINE_LOCATION)
-            }
-        }
-    }
-
-    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private val viewModel: MapViewModel by viewModels()
 
     @Inject
     lateinit var networkViewModel: NetworkViewModel
@@ -87,8 +42,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         // Initialize Firebase Auth
         super.onCreate(savedInstanceState)
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-        askPermissions()
         FirebaseApp.initializeApp(this)
         setContent {
             ARTreasureHuntTheme {

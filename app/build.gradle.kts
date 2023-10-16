@@ -90,7 +90,7 @@ dependencies {
     implementation ("com.google.android.gms:play-services-maps:18.1.0")
     implementation ("com.google.android.gms:play-services-location:21.0.1")
     // Google maps for compose
-    implementation ("com.google.maps.android:maps-compose:2.9.0")
+    implementation ("com.google.maps.android:maps-compose:2.11.1")
 
     // KTX for the Maps SDK for Android
     implementation ("com.google.maps.android:maps-ktx:3.2.1")
@@ -121,7 +121,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-location:21.0.1")
 
     // Permissions
-    implementation("com.google.accompanist:accompanist-permissions:0.31.1-alpha")
+    implementation("com.google.accompanist:accompanist-permissions:0.33.0-alpha")
 
     //Lifecycle
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.5")

@@ -4,9 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.os.Looper
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -14,22 +16,48 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.ktx.model.polygonOptions
+import com.shegs.artreasurehunt.data.repositories.LocationRepository
 import com.shegs.artreasurehunt.ui.clusters.ZoneClusterItem
 import com.shegs.artreasurehunt.ui.clusters.ZoneClusterManager
 import com.shegs.artreasurehunt.ui.clusters.calculateCameraViewPoints
 import com.shegs.artreasurehunt.ui.clusters.getCenterOfPolygon
 import com.shegs.artreasurehunt.ui.states.MapState
+import com.shegs.artreasurehunt.ui.states.PermissionEvent
+import com.shegs.artreasurehunt.ui.states.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MapViewModel @Inject constructor() : ViewModel() {
+class MapViewModel @Inject constructor(
+    private val locationRepository: LocationRepository,
+) : ViewModel() {
 
+    private val _viewState: MutableStateFlow<ViewState> = MutableStateFlow(ViewState.Loading)
+    val viewState = _viewState.asStateFlow()
 
+    fun processEvent(event: PermissionEvent) {
+        when(event) {
+          is PermissionEvent.Granted -> {
+                viewModelScope.launch {
+                    locationRepository.requestLocationUpdates().collect { location ->
+                        _viewState.update { ViewState.Success(location) }
+                        Log.i("NetworkVM", "${location?.latitude},${location?.longitude}")
+                    }
+                }
+            }
+           is PermissionEvent.Revoked -> {
+                _viewState.update { ViewState.RevokedPermissions }
+            }
+        }
+    }
 
     val state: MutableState<MapState> = mutableStateOf(
         MapState(
-            lastKnownLocation = null,
+            //lastKnownLocation = null,
             clusterItems = listOf(
                 ZoneClusterItem(
                     id = "zone-1",
@@ -59,48 +87,8 @@ class MapViewModel @Inject constructor() : ViewModel() {
         )
     )
 
-    @SuppressLint("MissingPermission")
-    fun getDeviceLocation(
-        fusedLocationProviderClient: FusedLocationProviderClient,
-        locationCallback: LocationCallback,
-    ) {
-        val locationRequest = LocationRequest.create().apply {
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }
-
-        try {
-            fusedLocationProviderClient.requestLocationUpdates(
-                locationRequest,
-                locationCallback,
-                Looper.getMainLooper()
-            )
-        } catch (e: SecurityException) {
-            // Handle location permission issues (e.g., show an error message or request permissions)
-        }
-    }
 
 
-//    @SuppressLint("MissingPermission")
-//    fun getDeviceLocation(
-//        fusedLocationProviderClient: FusedLocationProviderClient
-//    ) {
-//        /*
-//         * Get the best and most recent location of the device, which may be null in rare
-//         * cases when a location is not available.
-//         */
-//        try {
-//            val locationResult = fusedLocationProviderClient.lastLocation
-//            locationResult.addOnCompleteListener { task ->
-//                if (task.isSuccessful) {
-//                    state.value = state.value.copy(
-//                        lastKnownLocation = task.result,
-//                    )
-//                }
-//            }
-//        } catch (e: SecurityException) {
-//            // Show error or something
-//        }
-//    }
 
     fun setupClusterManager(
         context: Context,

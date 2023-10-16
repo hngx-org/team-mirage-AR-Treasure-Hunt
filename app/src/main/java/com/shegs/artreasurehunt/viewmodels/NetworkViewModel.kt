@@ -12,14 +12,17 @@ import com.shegs.artreasurehunt.data.network.request_and_response_models.AuthReq
 import com.shegs.artreasurehunt.data.network.request_and_response_models.Resource
 import com.shegs.artreasurehunt.data.repositories.LocationRepository
 import com.shegs.artreasurehunt.data.repositories.NetworkRepository
+import com.shegs.artreasurehunt.ui.states.PermissionEvent
+import com.shegs.artreasurehunt.ui.states.ViewState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class NetworkViewModel @Inject constructor(
     private val repository: NetworkRepository,
-    private val locationRepository: LocationRepository,
 ) : ViewModel() {
 
     var currentLocation by mutableStateOf<Location?>(null)
@@ -28,12 +31,6 @@ class NetworkViewModel @Inject constructor(
     val signUpFlow: StateFlow<Resource<FirebaseUser>?> = _signUpFlow
     val loginFlow: StateFlow<Resource<FirebaseUser>?> = _loginFlow
 
-    fun getCurrentLocation() {
-        viewModelScope.launch {
-            currentLocation = locationRepository.getCurrentLocation()
-            Log.d("current user location", currentLocation?.longitude.toString())
-        }
-    }
 
 
     fun signUp(authRequest: AuthRequest) {
@@ -50,7 +47,7 @@ class NetworkViewModel @Inject constructor(
             _loginFlow.value = Resource.Loading
             val result = repository.login(authRequest)
             _loginFlow.value = result
-            getCurrentLocation()
+           // getCurrentLocation()
         }
 
     }
