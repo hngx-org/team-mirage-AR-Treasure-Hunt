@@ -14,6 +14,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.google.android.gms.location.Geofence
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
@@ -25,12 +27,13 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapsComposeExperimentalApi
 import com.google.maps.android.compose.MarkerInfoWindow
 import com.google.maps.android.compose.rememberMarkerState
+import com.shegs.artreasurehunt.data.repositories.GeofenceHelper
 import com.shegs.artreasurehunt.ui.clusters.ZoneClusterManager
 import com.shegs.artreasurehunt.ui.states.MapState
 import kotlinx.coroutines.launch
 
 
-@SuppressLint("PotentialBehaviorOverride")
+@SuppressLint("PotentialBehaviorOverride", "MissingPermission")
 @OptIn(MapsComposeExperimentalApi::class)
 @Composable
 fun MapScreen(
@@ -42,6 +45,8 @@ fun MapScreen(
     currentPosition: LatLng
 ) {
 
+    val context = LocalContext.current
+
 
     val marker = LatLng(currentPosition.latitude, currentPosition.longitude)
     val locationState = rememberMarkerState(position = marker)
@@ -49,6 +54,10 @@ fun MapScreen(
     var showInfoWindow by remember {
         mutableStateOf(false)
     }
+
+    val geofenceHelper = GeofenceHelper(context)
+    val geofencingClient = LocationServices.getGeofencingClient(context)
+
 
     // Set properties using MapProperties which you can use to recompose the map
     val mapProperties = MapProperties(
@@ -66,8 +75,21 @@ fun MapScreen(
             properties = mapProperties,
             cameraPositionState = cameraPositionState
         ) {
-            val context = LocalContext.current
+//            val context = LocalContext.current
             val scope = rememberCoroutineScope()
+
+            val geofence = geofenceHelper.getGeofence(
+                "YourGeofenceID",
+                LatLng(currentPosition.latitude, currentPosition.latitude),
+                100.0f,
+                Geofence.GEOFENCE_TRANSITION_ENTER
+            )
+
+            // Create a geofencing request using GeofenceHelper
+            val geofencingRequest = geofenceHelper.getGeofencingRequest(geofence)
+
+            // Add the geofence to the geofencing client
+            geofencingClient.addGeofences(geofencingRequest, geofenceHelper.pendingIntent)
 
             MapEffect(state.clusterItems) { map ->
                 if (state.clusterItems.isNotEmpty()) {
