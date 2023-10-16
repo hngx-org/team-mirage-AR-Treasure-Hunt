@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "117840815586",
+    "project_id": "mirageartreasurehunt",
+    "storage_bucket": "mirageartreasurehunt.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:117840815586:android:eeabcdf7dab6dd2a49c5bb",
+        "android_client_info": {
+          "package_name": "com.shegs.artreasurehunt"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-I2EtKg93-nmFwvpQFJibd1PjbM8j_J4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
