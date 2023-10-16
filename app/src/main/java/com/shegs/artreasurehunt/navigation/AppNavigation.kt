@@ -2,7 +2,9 @@ package com.shegs.artreasurehunt.navigation
 
 import SignInScreen
 import SignUpScreen
+import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
@@ -21,11 +23,16 @@ fun Navigation(
     modifier: Modifier = Modifier
 ) {
 
+    val startingDestination = if (networkViewModel.hasUser != null) {
+        NestedNavItem.HomeScreen.route
+    }else {
+        NestedNavItem.SignUpScreen.route
+    }
 
 
     NavHost(
         navController = navController,
-        startDestination = NestedNavItem.SignUpScreen.route,
+        startDestination = startingDestination,
         modifier = modifier
     ) {
 
