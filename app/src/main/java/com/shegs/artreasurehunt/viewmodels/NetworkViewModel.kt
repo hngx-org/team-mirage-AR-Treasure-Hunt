@@ -25,7 +25,8 @@ class NetworkViewModel @Inject constructor(
     private val repository: NetworkRepository,
 ) : ViewModel() {
 
-    var currentLocation by mutableStateOf<Location?>(null)
+
+    val hasUser = repository.currentUser
     private val _signUpFlow = MutableStateFlow<Resource<FirebaseUser>?>(null)
     private val _loginFlow = MutableStateFlow<Resource<FirebaseUser>?>(null)
     val signUpFlow: StateFlow<Resource<FirebaseUser>?> = _signUpFlow
