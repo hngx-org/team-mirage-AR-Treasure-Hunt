@@ -39,8 +39,8 @@ class ARTreasureHuntService @Inject constructor(
                             userName = it
                         )
                     }
-                    val userDocumentRef = firestore.collection("users").document(user!!.id)
-                    userDocumentRef.set(user).await()
+                    val userDocumentRef = user!!.id?.let { firestore.collection("users").document(it) }
+                    userDocumentRef?.set(user)?.await()
                     emit(Resource.Success(user))
 
 

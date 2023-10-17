@@ -57,7 +57,7 @@ fun HomeMenuDialog(
                             MenuDialogButton(
                                 onButtonClick = onProfileClick,
                                 stringId = R.string.profile,
-                                menuIcon = {
+                                icon = {
                                     Image(
                                         painter = painterResource(id = R.drawable.pirate_hat),
                                         contentDescription = "",
@@ -69,7 +69,7 @@ fun HomeMenuDialog(
                             MenuDialogButton(
                                 onButtonClick = onLeaderBoardClick,
                                 stringId = R.string.leaderboard,
-                                menuIcon = {
+                                icon = {
                                     Image(
                                         painter = painterResource(id = R.drawable.leaderboard),
                                         contentDescription = "",
@@ -81,7 +81,7 @@ fun HomeMenuDialog(
                             MenuDialogButton(
                                 onButtonClick = onSettingsClick,
                                 stringId = R.string.settings,
-                                menuIcon = {
+                                icon = {
                                     Image(
                                         imageVector = Icons.Default.Settings,
                                         contentDescription = "",
@@ -98,7 +98,7 @@ fun HomeMenuDialog(
                             MenuDialogButton(
                                 onButtonClick = onDataRulesClick,
                                 stringId = R.string.data_rules,
-                                menuIcon = {
+                                icon = {
                                     Image(
                                         imageVector = Icons.Default.LibraryBooks,
                                         contentDescription = "",

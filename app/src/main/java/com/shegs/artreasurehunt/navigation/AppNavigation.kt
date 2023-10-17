@@ -3,14 +3,19 @@ package com.shegs.artreasurehunt.navigation
 import SignInScreen
 import SignUpScreen
 import android.util.Log
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.shegs.artreasurehunt.ui.HomeScreen
+import com.shegs.artreasurehunt.ui.ProfileScreen
 import com.shegs.artreasurehunt.ui.game.GameScreen
 import com.shegs.artreasurehunt.ui.getVideoUri
 import com.shegs.artreasurehunt.viewmodels.NetworkViewModel
@@ -59,6 +64,27 @@ fun Navigation(
 
         composable(NestedNavItem.GameScreen.route){
             GameScreen()
+        }
+
+        composable(route = NestedNavItem.ProfileScreen.route) {
+            val userData = networkViewModel.userData.collectAsState().value
+            val onSignOutClicked = remember {
+                {
+                    networkViewModel.signOut()
+                    navController.navigate(NestedNavItem.SignUpScreen.route)
+                }
+            }
+
+            val onBack:() -> Unit = remember {
+                {
+                    navController.navigateUp()
+                }
+            }
+            ProfileScreen(
+                emailAddress = userData.email ?: "",
+                onSignOutClick = onSignOutClicked,
+                onBack = onBack
+            )
         }
 
         //composable(NestedNavItem.MapScreen.route) {

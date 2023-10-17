@@ -182,7 +182,7 @@ fun HomeScreen(navController: NavController, videoUri: Uri) {
 
                 Text(
                     text = "AR Treasure Hunt",
-                    color = MaterialTheme.colorScheme.onPrimary,
+                    color = MaterialTheme.colorScheme.scrim,
                     modifier = Modifier
                         .padding(8.dp),
                     fontSize = 30.sp,
