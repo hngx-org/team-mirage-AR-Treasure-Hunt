@@ -4,17 +4,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shegs.artreasurehunt.R
 import com.shegs.artreasurehunt.data.models.ArenaModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ArenaViewModel : ViewModel(){
+
+class ArenaViewModel @Inject constructor(): ViewModel(){
 
     private val _arenas = MutableStateFlow<List<ArenaModel>>(emptyList())
     val arenas: StateFlow<List<ArenaModel>> = _arenas
 
     //Here is a list of image resource for the random image selection when and arena is created
-    private val arenaImages = listOf(
+    val arenaImages = listOf(
         R.drawable.arena_one,
         R.drawable.arena_two,
         R.drawable.arena_three,
@@ -31,6 +34,5 @@ class ArenaViewModel : ViewModel(){
             _arenas.emit(currentArenas)
         }
     }
-
 
 }

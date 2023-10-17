@@ -174,7 +174,7 @@ fun HomeScreen(navController: NavController, videoUri: Uri) {
                 }
 
                 Button(
-                    onClick = { /* Handle button click */ },
+                    onClick = { navController.navigate(NestedNavItem.ArenaScreen.route) },
                     modifier = Modifier.padding(4.dp),
                     shape = MaterialTheme.shapes.medium,
                     colors = ButtonDefaults.buttonColors(
