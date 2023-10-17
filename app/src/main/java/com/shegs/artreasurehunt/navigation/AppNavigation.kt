@@ -2,11 +2,7 @@ package com.shegs.artreasurehunt.navigation
 
 import SignInScreen
 import SignUpScreen
-import android.util.Log
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -16,21 +12,24 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.shegs.artreasurehunt.ui.HomeScreen
 import com.shegs.artreasurehunt.ui.ProfileScreen
+import com.shegs.artreasurehunt.ui.SettingScreen
 import com.shegs.artreasurehunt.ui.game.GameScreen
 import com.shegs.artreasurehunt.ui.getVideoUri
 import com.shegs.artreasurehunt.viewmodels.NetworkViewModel
+import com.shegs.artreasurehunt.viewmodels.SettingsViewModel
 
 
 @Composable
 fun Navigation(
     navController: NavHostController,
     networkViewModel: NetworkViewModel,
+    settingsViewModel: SettingsViewModel,
     modifier: Modifier = Modifier
 ) {
 
     val startingDestination = if (networkViewModel.hasUser != null) {
         NestedNavItem.HomeScreen.route
-    }else {
+    } else {
         NestedNavItem.SignUpScreen.route
     }
 
@@ -40,7 +39,6 @@ fun Navigation(
         startDestination = startingDestination,
         modifier = modifier
     ) {
-
 
 
 //        composable(com.shegs.artreasurehunt.navigation.NestedNavItem.SplashScreen.route) {
@@ -58,11 +56,18 @@ fun Navigation(
         composable(NestedNavItem.HomeScreen.route) {
             val context = LocalContext.current
             val videoUri = getVideoUri(context)
-            HomeScreen(navController, videoUri)
+            val soundState = settingsViewModel.soundSettings.collectAsState().value
+
+            HomeScreen(
+                navController,
+                videoUri,
+                hasSound = soundState.isSoundOn,
+                volume = soundState.soundLevel
+            )
             //ARCameraScreen(navController)
         }
 
-        composable(NestedNavItem.GameScreen.route){
+        composable(NestedNavItem.GameScreen.route) {
             GameScreen()
         }
 
@@ -75,7 +80,7 @@ fun Navigation(
                 }
             }
 
-            val onBack:() -> Unit = remember {
+            val onBack: () -> Unit = remember {
                 {
                     navController.navigateUp()
                 }
@@ -87,9 +92,25 @@ fun Navigation(
             )
         }
 
+        composable(route = NestedNavItem.SettingsScreen.route) {
+
+            val onBack: () -> Unit = remember {
+                {
+                    navController.navigateUp()
+                }
+            }
+
+            val soundState = settingsViewModel.soundSettings.collectAsState().value
+            SettingScreen(
+                onBack = onBack,
+                soundState = soundState,
+                updateSound = settingsViewModel::updateSoundSettings
+            )
+        }
+
         //composable(NestedNavItem.MapScreen.route) {
-            //val viewModel: MapViewModel = viewModel()
-            //MapScreen(state = viewModel.state.value, setupClusterManager = viewModel::setupClusterManager, calculateZoneViewCenter = viewModel::calculateZoneLatLngBounds)
+        //val viewModel: MapViewModel = viewModel()
+        //MapScreen(state = viewModel.state.value, setupClusterManager = viewModel::setupClusterManager, calculateZoneViewCenter = viewModel::calculateZoneLatLngBounds)
         //}
     }
 }

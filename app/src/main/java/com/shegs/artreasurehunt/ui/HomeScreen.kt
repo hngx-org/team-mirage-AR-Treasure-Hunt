@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -90,7 +89,12 @@ fun getVideoUri(context: Context): Uri {
 
 @SuppressLint("UnusedContentLambdaTargetStateParameter", "RememberReturnType")
 @Composable
-fun HomeScreen(navController: NavController, videoUri: Uri) {
+fun HomeScreen(
+    navController: NavController,
+    videoUri: Uri,
+    hasSound: Boolean,
+    volume: Float,
+) {
 
     val context = LocalContext.current
     val passwordFocusRequester = FocusRequester()
@@ -135,9 +139,15 @@ fun HomeScreen(navController: NavController, videoUri: Uri) {
 
     // Start playing audio when the composable is first composed
     DisposableEffect(Unit) {
-        mediaPlayer.isLooping = true // Set to true for looping
-        mediaPlayer.start()
 
+        if (hasSound) {
+            mediaPlayer.isLooping = true // Set to true for looping
+            mediaPlayer.start()
+            mediaPlayer.setVolume(volume, volume)
+        }
+        else {
+            mediaPlayer.stop()
+        }
         onDispose {
             // Stop the audio when the composable is removed from the screen
             mediaPlayer.stop()
