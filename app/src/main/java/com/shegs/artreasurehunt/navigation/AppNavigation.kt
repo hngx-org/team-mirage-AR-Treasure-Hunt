@@ -2,6 +2,8 @@ package com.shegs.artreasurehunt.navigation
 
 import SignInScreen
 import SignUpScreen
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -19,6 +21,7 @@ import com.shegs.artreasurehunt.viewmodels.ArenaViewModel
 import com.shegs.artreasurehunt.viewmodels.NetworkViewModel
 
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun Navigation(
     navController: NavHostController,
@@ -67,7 +70,7 @@ fun Navigation(
         composable(NestedNavItem.ArenaScreen.route){
 
             // Render the ArenaScreen with updated 'arenas' data
-            ArenaScreen(arenaViewModel = arenaViewModel)
+            ArenaScreen(arenaViewModel = arenaViewModel, navController)
         }
 
         //composable(NestedNavItem.MapScreen.route) {

@@ -1,6 +1,8 @@
 package com.shegs.artreasurehunt.ui.arena
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,14 +30,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.shegs.artreasurehunt.data.models.ArenaModel
 import com.shegs.artreasurehunt.viewmodels.ArenaViewModel
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArenaScreen(
-    arenaViewModel: ArenaViewModel
+    arenaViewModel: ArenaViewModel,
+    navController: NavController
 ) {
 
     // Collect the list of arenas from the ArenaViewModel
@@ -51,7 +56,7 @@ fun ArenaScreen(
             )
         }
     ) {
-        ArenaListScreen(arenas, arenaViewModel)
+        ArenaListScreen(arenas, arenaViewModel, navController)
     }
 
     if (isCreateDialogVisible) {
@@ -71,34 +76,30 @@ fun ArenaScreen(
 //        }
 }
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun ArenaListScreen(
     arenas: List<ArenaModel>,
     viewModel: ArenaViewModel,
+    navController: NavController
 ) {
     LazyColumn {
         items(arenas) { arena ->
-            ArenaItem(arena, viewModel)
+            ArenaItem(arena, viewModel, navController)
         }
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun ArenaItem(
     arena: ArenaModel,
-    arenaViewModel: ArenaViewModel
+    arenaViewModel: ArenaViewModel,
+    navController: NavController
 ) {
-    var isInfoCardVisible by remember { mutableStateOf(false) }
+    var isInfoCardVisible by remember { mutableStateOf(true) }
 
     Box(
-        modifier = Modifier
-            .clickable {
-                if (isInfoCardVisible){
-                    // Handle click action here
-                } else {
-                    isInfoCardVisible = true
-                }
-            }
     ) {
         Image(
             painter = painterResource(id = arena.imageResId), // Use the random image resource
@@ -106,6 +107,9 @@ fun ArenaItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
+                .clickable {
+                    isInfoCardVisible = !isInfoCardVisible
+                }
         )
         Text(
             text = arena.arenaName,
@@ -120,7 +124,8 @@ fun ArenaItem(
         if (isInfoCardVisible) {
             ArenaInfoCard(
                 arena = arena,
-                onClose = { isInfoCardVisible = false }
+                onClose = { isInfoCardVisible = false },
+                navController = navController
             )
         }
     }
