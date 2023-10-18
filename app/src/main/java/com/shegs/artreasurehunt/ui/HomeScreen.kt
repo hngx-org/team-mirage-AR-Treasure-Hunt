@@ -14,10 +14,13 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,10 +33,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -67,7 +73,7 @@ private fun Context.buildPlayerView(exoPlayer: ExoPlayer) =
 fun getVideoUri(context: Context): Uri {
     val packageName = context.packageName
     val resources = context.resources
-    val rawId = resources.getIdentifier("background_video", "raw", packageName)
+    val rawId = resources.getIdentifier("treasure", "raw", packageName)
     val videoUri = "android.resource://$packageName/$rawId"
     return Uri.parse(videoUri)
 }
@@ -136,28 +142,51 @@ fun HomeScreen(navController: NavController, videoUri: Uri) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                
+                Spacer(modifier = Modifier.height(300.dp))
 
                 Text(
-                    "AR Treasure Hunt",
-                    color = MaterialTheme.colorScheme.onPrimary,
+                    text ="AR Treasure Hunt",
+                    color = MaterialTheme.colorScheme.scrim,
                     modifier = Modifier
                         .padding(8.dp),
                     fontSize = 30.sp,
-                    fontFamily = FontFamily(Font(R.font.poppins_black))
+                    fontWeight = FontWeight(700),
+                    fontFamily = FontFamily(Font(R.font.rye_regular)),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
 
                 Button(
                     onClick = { navController.navigate(NestedNavItem.GameScreen.route) },
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier.padding(8.dp),
+                    shape = MaterialTheme.shapes.medium,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFC75119),
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
                 ) {
-                    Text("Start Hunting")
+                    Text(
+                        text = "Start Hunting",
+                        fontSize = 16.sp,
+                        fontFamily = FontFamily(Font(R.font.rye_regular))
+                    )
                 }
 
                 Button(
-                    onClick = { /* Handle button click */ },
-                    modifier = Modifier.padding(8.dp)
+                    onClick = { navController.navigate(NestedNavItem.ArenaScreen.route) },
+                    modifier = Modifier.padding(4.dp),
+                    shape = MaterialTheme.shapes.medium,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF7b522b),
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
                 ) {
-                    Text("How to hunt")
+                    Text(
+                        text = "How to hunt",
+                        fontSize = 16.sp,
+                        fontFamily = FontFamily(Font(R.font.rye_regular))
+                    )
                 }
             }
         }

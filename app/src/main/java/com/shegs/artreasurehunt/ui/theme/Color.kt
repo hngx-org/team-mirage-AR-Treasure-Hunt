@@ -13,3 +13,5 @@ val grey3 = Color(0x991E1E1E)
 val grey2 = Color(0xFFF5F5F5)
 val md_theme_light_onPrimary = Color(0xFFFFFFFF)
 val md_theme_dark_scrim = Color(0xFF000000)
+
+val deep_gold = Color(0xFFb55122)
