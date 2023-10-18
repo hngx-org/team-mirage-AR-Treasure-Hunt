@@ -131,7 +131,7 @@ dependencies {
     kapt("androidx.hilt:hilt-compiler:1.0.0-alpha01")
 
     //Navigation
-    val nav_version = "2.6.0"
+    val nav_version = "2.7.4"
     implementation("androidx.navigation:navigation-compose:$nav_version")
 
 
@@ -158,6 +158,9 @@ dependencies {
 
     implementation ("com.google.android.exoplayer:exoplayer-core:2.19.1")
     implementation ("com.google.android.exoplayer:exoplayer-ui:2.19.1")
+
+    //Lottie Animations
+    implementation("com.airbnb.android:lottie-compose:6.0.1")
 
     //Balloon tooltip library
     implementation ("com.github.skydoves:balloon-compose:1.5.2")
