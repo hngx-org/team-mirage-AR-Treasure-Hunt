@@ -2,6 +2,8 @@ package com.shegs.artreasurehunt.navigation
 
 import SignInScreen
 import SignUpScreen
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
@@ -10,6 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.shegs.artreasurehunt.ui.DataRulesScreen
 import com.shegs.artreasurehunt.ui.HomeScreen
 import com.shegs.artreasurehunt.ui.ProfileScreen
 import com.shegs.artreasurehunt.ui.SettingScreen
@@ -71,7 +74,21 @@ fun Navigation(
             GameScreen()
         }
 
-        composable(route = NestedNavItem.ProfileScreen.route) {
+        composable(
+            route = NestedNavItem.ProfileScreen.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(700)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(700)
+                )
+            }
+        ) {
             val userData = networkViewModel.userData.collectAsState().value
             val onSignOutClicked = remember {
                 {
@@ -92,7 +109,21 @@ fun Navigation(
             )
         }
 
-        composable(route = NestedNavItem.SettingsScreen.route) {
+        composable(
+            route = NestedNavItem.SettingsScreen.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(700)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(700)
+                )
+            }
+        ) {
 
             val onBack: () -> Unit = remember {
                 {
@@ -106,6 +137,29 @@ fun Navigation(
                 soundState = soundState,
                 updateSound = settingsViewModel::updateSoundSettings
             )
+        }
+
+        composable(
+            route = NestedNavItem.DataRulesScreen.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(700)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(700)
+                )
+            }
+        ) {
+            val onBack: () -> Unit = remember {
+                {
+                    navController.navigateUp()
+                }
+            }
+            DataRulesScreen(onBack = onBack)
         }
 
         //composable(NestedNavItem.MapScreen.route) {

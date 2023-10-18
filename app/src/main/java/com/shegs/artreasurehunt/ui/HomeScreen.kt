@@ -144,8 +144,7 @@ fun HomeScreen(
             mediaPlayer.isLooping = true // Set to true for looping
             mediaPlayer.start()
             mediaPlayer.setVolume(volume, volume)
-        }
-        else {
+        } else {
             mediaPlayer.stop()
         }
         onDispose {
@@ -233,20 +232,21 @@ fun HomeScreen(
                         fontFamily = FontFamily(Font(R.font.rye_regular))
                     )
                 }
-                IconButton(
-                    modifier = Modifier.bounceClick(),
-                    onClick = { showMenuDialog = !showMenuDialog },
+
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(25))
+                        .background(color = Color(0xFFC75119))
+                        .padding(6.dp),
                     content = {
-                        Box(
-                            modifier = Modifier
-                                .background(color = Color(0xFFC75119))
-                                .padding(6.dp)
-                                .clip(RoundedCornerShape(25)),
+                        IconButton(
+                            modifier = Modifier.bounceClick(),
+                            onClick = { showMenuDialog = !showMenuDialog },
                             content = {
                                 Icon(
                                     imageVector = Icons.Default.Menu,
                                     contentDescription = "",
-                                    modifier = Modifier.size(55.dp),
+                                    modifier = Modifier.size(60.dp),
                                     tint = MaterialTheme.colorScheme.onPrimary,
                                 )
                             }

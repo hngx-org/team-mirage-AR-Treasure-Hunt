@@ -131,7 +131,7 @@ dependencies {
     kapt("androidx.hilt:hilt-compiler:1.0.0-alpha01")
 
     //Navigation
-    val nav_version = "2.6.0"
+    val nav_version = "2.7.4"
     implementation("androidx.navigation:navigation-compose:$nav_version")
 
 
