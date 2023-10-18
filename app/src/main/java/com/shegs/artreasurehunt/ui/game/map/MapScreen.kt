@@ -20,6 +20,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.PolylineOptions
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapEffect
@@ -75,6 +76,14 @@ fun MapScreen(
             properties = mapProperties,
             cameraPositionState = cameraPositionState
         ) {
+            val destination = LatLng(8.9584, 7.4561)
+
+
+            // Create a PolylineOptions object
+            val lineOptions = PolylineOptions()
+                .add(currentPosition) // Start point
+                .add(destination)    // End point
+                .color(0xFF6650a4.toInt())
 //            val context = LocalContext.current
             val scope = rememberCoroutineScope()
 
@@ -86,12 +95,32 @@ fun MapScreen(
             )
 
             // Create a geofencing request using GeofenceHelper
-            val geofencingRequest = geofenceHelper.getGeofencingRequest(geofence)
+//
+//            MapEffect(key1 = true ){map->
+//
+//                map.setOnMapClickListener {
+//                    Log.d("map clicked", "map clickeddd")
+//                    val geofencingRequest = geofenceHelper.getGeofencingRequest(geofence)
+//
+//
+//                    // Add the geofence to the geofencing client
+//                    geofencingClient.addGeofences(geofencingRequest, geofenceHelper.pendingIntent)
+//                        .addOnSuccessListener {
+//                            Log.d("GEOFENCE FAILURE", it.toString())
+//                        }.addOnFailureListener {
+//                            Log.d("GEOFENCE FAILURE", it.message.toString())
+//                        }
+//                }
+//            }
 
-            // Add the geofence to the geofencing client
-            geofencingClient.addGeofences(geofencingRequest, geofenceHelper.pendingIntent)
 
             MapEffect(state.clusterItems) { map ->
+                map.addPolyline(lineOptions)
+                val geofencingRequest = geofenceHelper.getGeofencingRequest(geofence)
+
+
+                // Add the geofence to the geofencing client
+                geofencingClient.addGeofences(geofencingRequest, geofenceHelper.pendingIntent)
                 if (state.clusterItems.isNotEmpty()) {
                     val clusterManager = setupClusterManager(context, map)
                     map.setOnCameraIdleListener(clusterManager)

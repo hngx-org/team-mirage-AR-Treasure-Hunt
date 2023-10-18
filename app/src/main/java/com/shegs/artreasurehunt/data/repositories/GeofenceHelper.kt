@@ -13,7 +13,7 @@ class GeofenceHelper(base: Context?) : ContextWrapper(base) {
     private val TAG = "GeofenceHelper"
     val pendingIntent: PendingIntent by lazy {
         val intent = Intent(this, ARTreasureHuntBroadcastReceiver::class.java)
-        PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
 
