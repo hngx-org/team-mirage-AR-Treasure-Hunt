@@ -11,10 +11,12 @@ import com.google.firebase.firestore.FirebaseFirestore
 //import com.shegs.artreasurehunt.data.repositories.GeofencingRepository
 import com.shegs.artreasurehunt.data.repositories.LocationRepository
 import com.shegs.artreasurehunt.data.repositories.NetworkRepository
+import com.shegs.artreasurehunt.viewmodels.ArenaViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -81,6 +83,7 @@ object AppModule {
             context = context
         )
     }
+
 
 //    @Provides
 //    @Singleton

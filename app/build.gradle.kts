@@ -162,5 +162,8 @@ dependencies {
     //Lottie Animations
     implementation("com.airbnb.android:lottie-compose:6.0.1")
 
+    //Balloon tooltip library
+    implementation ("com.github.skydoves:balloon-compose:1.5.2")
+
 
 }
