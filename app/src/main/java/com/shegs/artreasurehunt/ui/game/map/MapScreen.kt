@@ -116,11 +116,11 @@ fun MapScreen(
 
             MapEffect(state.clusterItems) { map ->
                 map.addPolyline(lineOptions)
-                                    val geofencingRequest = geofenceHelper.getGeofencingRequest(geofence)
+                val geofencingRequest = geofenceHelper.getGeofencingRequest(geofence)
 
 
-                    // Add the geofence to the geofencing client
-                    geofencingClient.addGeofences(geofencingRequest, geofenceHelper.pendingIntent)
+                // Add the geofence to the geofencing client
+                geofencingClient.addGeofences(geofencingRequest, geofenceHelper.pendingIntent)
                 if (state.clusterItems.isNotEmpty()) {
                     val clusterManager = setupClusterManager(context, map)
                     map.setOnCameraIdleListener(clusterManager)
