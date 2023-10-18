@@ -1,8 +1,10 @@
 package com.shegs.artreasurehunt
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -13,7 +15,6 @@ import com.google.firebase.FirebaseApp
 import com.shegs.artreasurehunt.navigation.Navigation
 import com.shegs.artreasurehunt.ui.theme.ARTreasureHuntTheme
 import com.shegs.artreasurehunt.viewmodels.ArenaViewModel
-import com.shegs.artreasurehunt.viewmodels.MapViewModel
 import com.shegs.artreasurehunt.viewmodels.NetworkViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -30,6 +31,7 @@ class MainActivity : ComponentActivity() {
 
 
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         // Initialize Firebase Auth
         super.onCreate(savedInstanceState)
@@ -46,7 +48,7 @@ class MainActivity : ComponentActivity() {
                     Navigation(
                         navController = navController,
                         networkViewModel = networkViewModel,
-                        arenaViewModel = arenaViewModel
+                        arenaViewModel = arenaViewModel,
                         settingsViewModel = hiltViewModel()
                     )
                 }
