@@ -13,4 +13,9 @@ sealed class NestedNavItem(val route: String, val label: String? = null, val ico
     object MapScreen : NestedNavItem(route = "map_screen")
 
     object ArenaScreen : NestedNavItem(route = "arena_screen")
+
+    object ProfileScreen: NestedNavItem(route = "profile")
+    object LeaderBoardScreen: NestedNavItem(route = "leaderboard")
+    object SettingsScreen: NestedNavItem(route = "settings")
+    object DataRulesScreen: NestedNavItem(route = "data_rules")
 }

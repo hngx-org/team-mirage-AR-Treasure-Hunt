@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
+import com.shegs.artreasurehunt.data.models.User
 import com.shegs.artreasurehunt.data.network.request_and_response_models.AuthRequest
 import com.shegs.artreasurehunt.data.network.request_and_response_models.Resource
 import com.shegs.artreasurehunt.data.repositories.LocationRepository
@@ -27,6 +28,21 @@ class NetworkViewModel @Inject constructor(
 
 
     val hasUser = repository.currentUser
+    val userData = MutableStateFlow(User())
+
+    init {
+        getUserDetails()
+    }
+    private fun getUserDetails() {
+        if (hasUser!= null) {
+            userData.update {
+                it.copy(
+                    email = repository.currentUser?.email,
+                )
+            }
+        }
+    }
+
     private val _signUpFlow = MutableStateFlow<Resource<FirebaseUser>?>(null)
     private val _loginFlow = MutableStateFlow<Resource<FirebaseUser>?>(null)
     val signUpFlow: StateFlow<Resource<FirebaseUser>?> = _signUpFlow
@@ -51,5 +67,9 @@ class NetworkViewModel @Inject constructor(
            // getCurrentLocation()
         }
 
+    }
+
+    fun signOut() {
+        repository.signOut()
     }
 }
