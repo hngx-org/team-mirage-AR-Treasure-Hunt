@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -30,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -87,7 +89,7 @@ fun CreateArenaDialog(
                             focusedIndicatorColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent
                         ),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next),
                         value = arenaName,
                         onValueChange = { arenaName = it },
                         label = {
@@ -119,7 +121,7 @@ fun CreateArenaDialog(
                             focusedIndicatorColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent
                         ),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next),
                         value = arenaDescription,
                         onValueChange = { arenaDescription = it },
                         label = {
@@ -150,7 +152,7 @@ fun CreateArenaDialog(
                             focusedIndicatorColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent
                         ),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                         value = arenaLocation,
                         onValueChange = { arenaLocation = it },
                         label = {
