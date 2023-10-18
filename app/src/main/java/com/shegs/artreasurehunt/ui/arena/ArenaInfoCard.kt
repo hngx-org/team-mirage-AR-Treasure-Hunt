@@ -70,11 +70,6 @@ fun ArenaInfoCard(
         setDismissWhenClicked(true)
     }
 
-    Column(modifier = Modifier
-        .fillMaxSize(),
-        horizontalAlignment = Alignment.End,
-        verticalArrangement = Arrangement.Top
-    ) {
         Balloon(
             modifier = Modifier,
             builder = builder,
@@ -173,17 +168,15 @@ fun ArenaInfoCard(
                 }
 
             }
-        ) {balloonWindow ->
+        ) { balloonWindow ->
 
             Button(
                 modifier = Modifier.size(120.dp, 40.dp),
-                onClick = { balloonWindow.showAlignBottom()}
+                onClick = { balloonWindow.showAlignBottom() }
             ) {
                 Text(text = "Arena Info")
             }
 
         }
-    }
-    
-}
 
+}

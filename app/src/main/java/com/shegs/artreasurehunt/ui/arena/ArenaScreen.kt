@@ -7,9 +7,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -99,28 +103,15 @@ fun ArenaItem(
 ) {
     var isInfoCardVisible by remember { mutableStateOf(true) }
 
-    Box(
-    ) {
+    Box {
         Image(
-            painter = painterResource(id = arena.imageResId), // Use the random image resource
+            painter = painterResource(id = arena.imageResId),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
-                .clickable {
-                    isInfoCardVisible = !isInfoCardVisible
-                }
-        )
-        Text(
-            text = arena.arenaName,
-            modifier = Modifier
-                .background(Color.White)
-                .padding(16.dp)
-                .clickable { /* Handle click action here */  },
-            fontSize = 16.sp
         )
 
-        // Display Info Card on long press
         if (isInfoCardVisible) {
             ArenaInfoCard(
                 arena = arena,
@@ -128,5 +119,14 @@ fun ArenaItem(
                 navController = navController
             )
         }
+
+        Text(
+            text = arena.arenaName,
+            modifier = Modifier
+                .background(Color.White)
+                .padding(16.dp)
+                .clickable { isInfoCardVisible = !isInfoCardVisible },
+            fontSize = 16.sp
+        )
     }
 }
