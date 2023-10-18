@@ -215,12 +215,19 @@ fun ArenaItem(
                     onClick = { navController.navigate(NestedNavItem.GameScreen.route) },
                     shape = MaterialTheme.shapes.medium,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.secondary
                     ),
                     border = BorderStroke(2.dp, MaterialTheme.colorScheme.secondary)
                 ) {
-                    Text(text = "Play in this Arena")
+                    Text(
+                        text = "Play in this Arena",
+                        color = MaterialTheme.colorScheme.secondary,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        fontSize = 12.sp,
+                        fontFamily = FontFamily(Font(R.font.poppins_medium))
+                    )
                 }
 
             }
