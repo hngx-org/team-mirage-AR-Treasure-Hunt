@@ -11,7 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,7 +27,7 @@ fun MenuDialogButton(
         onClick = onButtonClick,
         modifier = modifier.padding(8.dp).fillMaxWidth().bounceClick(),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFFC75119),
+            containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary
         ),
         content = {
