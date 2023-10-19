@@ -202,7 +202,7 @@ fun HomeScreen(
                 )
 
                 Button(
-                    onClick = { navController.navigate(NestedNavItem.GameScreen.route) },
+                    onClick = { navController.navigate(NestedNavItem.ArenaScreen.route) },
                     modifier = Modifier.padding(8.dp),
                     shape = MaterialTheme.shapes.medium,
                     colors = ButtonDefaults.buttonColors(
@@ -218,7 +218,7 @@ fun HomeScreen(
                 }
 
                 Button(
-                    onClick = { navController.navigate(NestedNavItem.ArenaScreen.route) },
+                    onClick = {  },
                     modifier = Modifier.padding(4.dp),
                     shape = MaterialTheme.shapes.medium,
                     colors = ButtonDefaults.buttonColors(
