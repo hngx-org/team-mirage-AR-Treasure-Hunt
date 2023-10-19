@@ -3,7 +3,6 @@ package com.shegs.artreasurehunt.viewmodels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.ktx.Firebase
 import com.shegs.artreasurehunt.R
 import com.shegs.artreasurehunt.data.models.ArenaModel
 import com.shegs.artreasurehunt.data.network.request_and_response_models.Resource
@@ -21,6 +20,9 @@ class ArenaViewModel @Inject constructor(
 
     private val _arenas = MutableStateFlow<List<ArenaModel>>(emptyList())
     val arenas: StateFlow<List<ArenaModel>> = _arenas
+
+    private val _arenasFlow = MutableStateFlow<Resource<List<ArenaModel>?>>(Resource.Loading)
+    val arenasFlow: StateFlow<Resource<List<ArenaModel>?>> = _arenasFlow
 
     //Here is a list of image resource for the random image selection when and arena is created
     val arenaImages = listOf(
@@ -57,6 +59,14 @@ class ArenaViewModel @Inject constructor(
                 // Implement error handling as needed
                 Log.e("ArenaViewModel", errorMessage)
             }
+        }
+    }
+
+    fun fetchArenas() {
+        viewModelScope.launch {
+            _arenasFlow.value = Resource.Loading
+            val result = networkRepository.fetchArenas()
+            _arenasFlow.value = result
         }
     }
 

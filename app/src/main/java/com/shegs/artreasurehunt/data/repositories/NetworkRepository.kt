@@ -71,12 +71,30 @@ class NetworkRepository @Inject constructor(
     suspend fun saveArena(arena: ArenaModel): Resource<Unit> {
         return try {
             Resource.Loading
-            
+
             val collection = firestore.collection("arenas")
 
             collection.add(arena).await()
 
             Resource.Success(Unit)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Error(e.message!!)
+        }
+    }
+
+    suspend fun fetchArenas(): Resource<List<ArenaModel>> {
+        return try {
+            Resource.Loading
+
+            val collection = firestore.collection("arenas")
+            val querySnapshot = collection.get().await()
+
+            val arenas = querySnapshot.documents.mapNotNull { document ->
+                document.toObject(ArenaModel::class.java)
+            }
+
+            Resource.Success(arenas)
         } catch (e: Exception) {
             e.printStackTrace()
             Resource.Error(e.message!!)

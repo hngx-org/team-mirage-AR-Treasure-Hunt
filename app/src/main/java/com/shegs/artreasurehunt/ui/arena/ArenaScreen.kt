@@ -12,9 +12,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,6 +24,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -29,6 +32,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,6 +52,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.shegs.artreasurehunt.R
 import com.shegs.artreasurehunt.data.models.ArenaModel
+import com.shegs.artreasurehunt.data.network.request_and_response_models.Resource
 import com.shegs.artreasurehunt.navigation.NestedNavItem
 import com.shegs.artreasurehunt.viewmodels.ArenaViewModel
 import com.skydoves.balloon.ArrowPositionRules
@@ -97,10 +102,42 @@ fun ArenaListScreen(
     viewModel: ArenaViewModel,
     navController: NavController
 ) {
-    LazyColumn {
-        items(arenas) { arena ->
-            ArenaItem(arena, viewModel, navController)
+    val arenasResource by viewModel.arenasFlow.collectAsState()
+
+    when (arenasResource) {
+        is Resource.Loading -> {
+            // Show a loading indicator
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.size(30.dp)
+            ) {
+                CircularProgressIndicator() // Show a circular progress indicator
+            }
         }
+
+        is Resource.Success -> {
+            val arenas = (arenasResource as Resource.Success<List<ArenaModel>>).data
+
+            if (arenas.isNullOrEmpty()) {
+                // Show a message when no arenas are available
+                Text("No arenas available.")
+            } else {
+                LazyColumn {
+                    items(arenas) { arena ->
+                        ArenaItem(arena, viewModel, navController)
+                    }
+                }
+            }
+        }
+
+        is Resource.Error -> {
+            // Handle the error case
+            Text("Error: ${(arenasResource as Resource.Error).message}")
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchArenas()
     }
 }
 
