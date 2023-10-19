@@ -22,6 +22,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -29,8 +32,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -109,9 +114,12 @@ fun ArenaListScreen(
             // Show a loading indicator
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier.size(30.dp)
+                modifier = Modifier.fillMaxSize()
             ) {
-                CircularProgressIndicator() // Show a circular progress indicator
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(40.dp)
+                )
             }
         }
 
@@ -307,3 +315,68 @@ fun ArenaItem(
         }
     }
 }
+
+
+//
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun BottomSheet(onDismiss: () -> Unit) {
+//    val modalBottomSheetState = rememberModalBottomSheetState()
+//
+//    ModalBottomSheet(
+//        onDismissRequest = { onDismiss() },
+//        sheetState = modalBottomSheetState,
+//        dragHandle = { BottomSheetDefaults.DragHandle() },
+//    ) {
+//        BottomSheetContent()
+//    }
+//}
+//
+//
+//@Composable
+//fun BottomSheetContent(
+//    modifier: Modifier = Modifier
+//) {
+//    Row(
+//        modifier = modifier
+//            .padding(16.dp),
+//        verticalAlignment = Alignment.CenterVertically,
+//        horizontalArrangement = Arrangement.SpaceBetween
+//    ) {
+//        // Delete icon and text
+//        Row(
+//            verticalAlignment = Alignment.CenterVertically,
+//            horizontalArrangement = Arrangement.spacedBy(4.dp)
+//        ) {
+//            Icon(
+//                imageVector = Icons.Default.Delete,
+//                contentDescription = null,
+//                tint = Color.Red,
+//                modifier = Modifier.clickable {  }
+//            )
+//            Text(
+//                text = "Delete",
+//                color = Color.Red,
+//                fontWeight = FontWeight.Bold,
+//                modifier = Modifier.clickable {  }
+//            )
+//        }
+//
+//        // Share icon and text
+//        Row(
+//            verticalAlignment = Alignment.CenterVertically,
+//            horizontalArrangement = Arrangement.spacedBy(4.dp)
+//        ) {
+//            Icon(
+//                imageVector = Icons.Default.Share,
+//                contentDescription = null,
+//                modifier = Modifier.clickable {  }
+//            )
+//            Text(
+//                text = "Share",
+//                fontWeight = FontWeight.Bold,
+//                modifier = Modifier.clickable {  }
+//            )
+//        }
+//    }
+//}
