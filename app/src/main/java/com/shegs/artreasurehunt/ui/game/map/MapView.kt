@@ -125,9 +125,6 @@ import com.shegs.artreasurehunt.viewmodels.MapViewModel
                     modifier = modifier,
                     cameraPositionState = cameraState,
                     currentPosition = currentLoc,
-                    state = mapViewModel.state.value,
-                    setupClusterManager = mapViewModel::setupClusterManager,
-                    calculateZoneViewCenter = mapViewModel::calculateZoneLatLngBounds,
                     treasureCircles = mapViewModel.treasureHuntCircles ?: emptyList()
                 )
             }
