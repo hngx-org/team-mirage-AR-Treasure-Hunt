@@ -31,7 +31,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
 
-const val GEOFENCE_RADIUS = 1000.0
+const val GEOFENCE_RADIUS = 500.0
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
