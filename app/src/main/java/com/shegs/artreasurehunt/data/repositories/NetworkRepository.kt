@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import com.shegs.artreasurehunt.data.models.ArenaModel
 import com.shegs.artreasurehunt.data.models.User
 import com.shegs.artreasurehunt.data.network.request_and_response_models.AuthRequest
 import com.shegs.artreasurehunt.data.network.request_and_response_models.Resource
@@ -66,5 +67,20 @@ class NetworkRepository @Inject constructor(
     }
 
     fun signOut() = Firebase.auth.signOut()
+
+    suspend fun saveArena(arena: ArenaModel): Resource<Unit> {
+        return try {
+            Resource.Loading
+            
+            val collection = firestore.collection("arenas")
+
+            collection.add(arena).await()
+
+            Resource.Success(Unit)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Error(e.message!!)
+        }
+    }
 
 }
