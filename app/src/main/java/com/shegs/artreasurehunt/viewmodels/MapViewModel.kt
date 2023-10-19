@@ -142,53 +142,51 @@ class MapViewModel @Inject constructor(
     private fun generateRandomPointsAroundUserLocation(
         userLocationLatLng: LatLng?,
         numberOfPoints: Int = 5,
-        minDistanceKm: Double = 2.0,
-        maxDistanceKm: Double = 10.0,
-    ): List<TreasureCircleData>? {
-        viewModelScope.launch {
-            val random = Random(seed = 2)
-            val treasureData = mutableListOf<TreasureCircleData>()
+        minDistanceKm: Double = 0.05,
+        maxDistanceKm: Double = 2.0,
+    ): List<TreasureCircleData> {
+        val random = Random(seed = 2)
+        val treasureData = mutableListOf<TreasureCircleData>()
 
-            for (i in 1..numberOfPoints) {
-                var validPoint: LatLng? = null
+        for (i in 1..numberOfPoints) {
+            var validPoint: LatLng? = null
 
-                while (validPoint == null) {
-                    // Generate random distance and angle
-                    val distanceKm =
-                        minDistanceKm + (maxDistanceKm - minDistanceKm) * random.nextDouble()
-                    val angle = random.nextDouble() * 360.0
+            while (validPoint == null) {
+                // Generate random distance and angle
+                val distanceKm =
+                    minDistanceKm + (maxDistanceKm - minDistanceKm) * random.nextDouble()
+                val angle = random.nextDouble() * 360.0
 
-                    // Convert distance and angle to latitude and longitude offsets
-                    val latOffset = (distanceKm / 111.32) * cos(angle)
-                    val lngOffset = (distanceKm / 111.32) * sin(angle)
+                // Convert distance and angle to latitude and longitude offsets
+                val latOffset = (distanceKm / 111.32) * cos(angle)
+                val lngOffset = (distanceKm / 111.32) * sin(angle)
 
-                    // Calculate the new LatLng around the user's location
-                    // same as :val newLat = userLocation.latitude + latOffset
-                    //            val newLng = userLocation.longitude + lngOffset
+                // Calculate the new LatLng around the user's location
+                // same as :val newLat = userLocation.latitude + latOffset
+                //            val newLng = userLocation.longitude + lngOffset
 
-                    val newLat = userLocationLatLng?.latitude?.plus(latOffset)
-                    val newLng = userLocationLatLng?.longitude?.plus(lngOffset)
+                val newLat = userLocationLatLng?.latitude?.plus(latOffset)
+                val newLng = userLocationLatLng?.longitude?.plus(lngOffset)
 
-                    val potentialPoint = LatLng(newLat!!, newLng!!)
+                val potentialPoint = LatLng(newLat!!, newLng!!)
 
-                    // Check the distance between the new point and all previously generated points
-                    val tooClose = treasureData.any { point ->
-                        SphericalUtil.computeDistanceBetween(
-                            potentialPoint,
-                            point.center
-                        ) < minDistanceKm * 1000
-                    }
-
-                    if (!tooClose) {
-                        validPoint = potentialPoint
-                    }
+                // Check the distance between the new point and all previously generated points
+                val tooClose = treasureData.any { point ->
+                    SphericalUtil.computeDistanceBetween(
+                        potentialPoint,
+                        point.center
+                    ) < minDistanceKm * 1000
                 }
 
-                // Create a TreasureCircleData with a unique name and the valid center location
-                val treasureName = "Hunting Area $i"
-                treasureData.add(TreasureCircleData(name = treasureName, center = validPoint))
+                if (!tooClose) {
+                    validPoint = potentialPoint
+                }
             }
+
+            // Create a TreasureCircleData with a unique name and the valid center location
+            val treasureName = "Hunting Area $i"
+            treasureData.add(TreasureCircleData(name = treasureName, center = validPoint))
         }
-        return treasureHuntCircles
+        return treasureData
     }
 }
