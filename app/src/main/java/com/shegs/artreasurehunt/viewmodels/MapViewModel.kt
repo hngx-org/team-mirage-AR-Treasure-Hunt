@@ -142,8 +142,8 @@ class MapViewModel @Inject constructor(
     private fun generateRandomPointsAroundUserLocation(
         userLocationLatLng: LatLng?,
         numberOfPoints: Int = 2,
-        minDistanceKm: Double = 2.0,
-        maxDistanceKm: Double = 8.0,
+        minDistanceKm: Double = 1.0,
+        maxDistanceKm: Double = 3.0,
     ): List<TreasureCircleData> {
         val random = Random(seed = 2)
         val treasureData = mutableListOf<TreasureCircleData>()
