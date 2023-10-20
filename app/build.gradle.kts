@@ -65,9 +65,9 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.9.0")
+    implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation("androidx.activity:activity-compose:1.7.2")
+    implementation("androidx.activity:activity-compose:1.8.0")
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
@@ -86,7 +86,7 @@ dependencies {
     implementation ("androidx.compose.material3:material3:1.2.0-alpha02")
 
     // Need this or MapEffect throws exception.
-    implementation ("androidx.appcompat:appcompat:1.5.1")
+    implementation ("androidx.appcompat:appcompat:1.6.1")
 
     // Google maps
     implementation ("com.google.android.gms:play-services-maps:18.1.0")
@@ -95,7 +95,7 @@ dependencies {
     implementation ("com.google.maps.android:maps-compose:2.11.1")
 
     // KTX for the Maps SDK for Android
-    implementation ("com.google.maps.android:maps-ktx:3.2.1")
+    implementation ("com.google.maps.android:maps-ktx:3.3.0")
     // KTX for the Maps SDK for Android Utility Library
     implementation ("com.google.maps.android:maps-utils-ktx:3.2.1")
 
@@ -147,14 +147,14 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
 
     //Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.5")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
 
     //Preferences datastore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     //Icons Extended
-    implementation("androidx.compose.material:material-icons-extended:1.4.3")
+    implementation("androidx.compose.material:material-icons-extended:1.5.3")
 
     implementation ("com.google.android.exoplayer:exoplayer:2.19.1")
 

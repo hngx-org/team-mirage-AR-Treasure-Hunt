@@ -2,6 +2,7 @@ package com.shegs.artreasurehunt.viewmodels
 
 import android.content.Context
 import android.graphics.Color
+import android.os.Looper
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -26,6 +27,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.logging.Handler
 import javax.inject.Inject
 import kotlin.math.cos
 import kotlin.math.sin
@@ -136,8 +138,11 @@ class MapViewModel @Inject constructor(
 
         if (distanceInMeters < radius) {
             //Todo add broadcast receiver
-            Toast.makeText(context, "Within GeoFence", Toast.LENGTH_LONG).show()
-            _isWithinGeoFence.update { true }
+            // Delay for 10 seconds (10000 milliseconds) before showing the toast
+            android.os.Handler(Looper.getMainLooper()).postDelayed({
+                Toast.makeText(context, "Within GeoFence", Toast.LENGTH_LONG).show()
+                _isWithinGeoFence.update { true }
+            }, 20000)
         }
 
     }

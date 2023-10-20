@@ -255,18 +255,17 @@ fun HomeScreen(
             }
 
             AnimatedVisibility(
-                visible = showMenuDialog,
-                content = {
-                    HomeMenuDialog(
-                        onShowDialog = { showMenuDialog = !showMenuDialog },
-                        onProfileClick = onProfileClick,
-                        onLeaderBoardClick = onLeaderBoardClick,
-                        onDataRulesClick = onDataRulesClick,
-                        onSettingsClick = onSettingsClick
-                    )
+                visible = showMenuDialog
+            ) {
+                HomeMenuDialog(
+                    onShowDialog = { showMenuDialog = !showMenuDialog },
+                    onProfileClick = onProfileClick,
+                    onLeaderBoardClick = onLeaderBoardClick,
+                    onDataRulesClick = onDataRulesClick,
+                    onSettingsClick = onSettingsClick
+                )
 
-                }
-            )
+            }
         }
     }
 
