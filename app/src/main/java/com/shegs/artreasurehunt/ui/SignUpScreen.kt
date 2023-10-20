@@ -1,6 +1,5 @@
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -130,13 +129,13 @@ fun SignUpScreenContent(
                     text = "Welcome on board !",
                     fontWeight = FontWeight(500),
                     style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.scrim
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
                 Text(
                     text = "Sign up to create an account",
                     fontWeight = FontWeight(400),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.scrim.copy(0.6f)
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
             }
         }
@@ -152,7 +151,7 @@ fun SignUpScreenContent(
                     text = "User Name",
                     fontWeight = FontWeight(400),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.scrim.copy(0.6f)
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 RoundedTextField(
@@ -176,7 +175,7 @@ fun SignUpScreenContent(
                     text = "Email Address",
                     fontWeight = FontWeight(400),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.scrim.copy(0.6f)
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 RoundedTextField(
@@ -203,7 +202,7 @@ fun SignUpScreenContent(
                     text = "Password",
                     fontWeight = FontWeight(400),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.scrim.copy(0.6f)
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 TextField(
@@ -215,7 +214,7 @@ fun SignUpScreenContent(
                             text = "Password",
                             fontWeight = FontWeight(400),
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.scrim.copy(0.6f)
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
                     },
                     leadingIcon = {
@@ -283,7 +282,7 @@ fun SignUpScreenContent(
                         style = TextStyle(
                             fontSize = 14.sp,
                             fontWeight = FontWeight(200),
-                            color = Color(0xFF000000),
+                            color = MaterialTheme.colorScheme.onPrimary,
                         )
                     )
                     Spacer(modifier = Modifier.padding(horizontal = 2.dp))
@@ -295,7 +294,7 @@ fun SignUpScreenContent(
                         style = TextStyle(
                             fontSize = 14.sp,
                             fontWeight = FontWeight(500),
-                            color = Color(0xFF000000),
+                            color = MaterialTheme.colorScheme.onPrimary,
                         )
                     )
                 }

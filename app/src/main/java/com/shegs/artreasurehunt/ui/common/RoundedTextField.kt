@@ -39,7 +39,7 @@ fun RoundedTextField(
                 text = label,
                 fontWeight = FontWeight(400),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.scrim.copy(0.6f))
+                color = MaterialTheme.colorScheme.onPrimary)
         },
         leadingIcon = {
             Icon(imageVector = icon, contentDescription = label)
