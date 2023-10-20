@@ -31,7 +31,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
 
-const val GEOFENCE_RADIUS = 500.0
+const val GEOFENCE_RADIUS = 209.0
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
@@ -145,8 +145,8 @@ class MapViewModel @Inject constructor(
     private fun generateRandomPointsAroundUserLocation(
         userLocationLatLng: LatLng?,
         numberOfPoints: Int = 2,
-        minDistanceKm: Double = 2.0,
-        maxDistanceKm: Double = 8.0,
+        minDistanceKm: Double = 0.010,
+        maxDistanceKm: Double = 3.0,
     ): List<TreasureCircleData> {
         val random = Random(seed = 2)
         val treasureData = mutableListOf<TreasureCircleData>()

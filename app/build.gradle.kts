@@ -83,6 +83,8 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    implementation ("androidx.compose.material3:material3:1.2.0-alpha02")
+
     // Need this or MapEffect throws exception.
     implementation ("androidx.appcompat:appcompat:1.5.1")
 
