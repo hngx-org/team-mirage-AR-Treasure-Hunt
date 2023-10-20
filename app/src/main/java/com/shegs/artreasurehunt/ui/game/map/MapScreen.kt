@@ -1,6 +1,5 @@
 package com.shegs.artreasurehunt.ui.game.map
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,7 +36,6 @@ import com.shegs.artreasurehunt.ui.theme.OrangePrimary
 import com.shegs.artreasurehunt.viewmodels.GEOFENCE_RADIUS
 
 
-@SuppressLint("PotentialBehaviorOverride", "MissingPermission")
 @Composable
 fun MapScreen(
     modifier: Modifier,

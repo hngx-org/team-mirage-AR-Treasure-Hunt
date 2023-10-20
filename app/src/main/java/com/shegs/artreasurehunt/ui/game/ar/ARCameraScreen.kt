@@ -1,15 +1,12 @@
 package com.shegs.artreasurehunt.ui.game.ar
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -23,14 +20,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 
-@SuppressLint("RememberReturnType", "SuspiciousIndentation")
 @Composable
-fun ARCameraScreen(modifier: Modifier) {
+fun ARCameraScreen(
+    modifier: Modifier,
+    isWithinGeoFence: Boolean,
+) {
     val arModelNodes = remember { mutableStateOf<ArModelNode?>(null) }
     val nodes = remember { mutableListOf<ArNode>() }
     val context = LocalContext.current
 
-    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = modifier
@@ -74,16 +72,18 @@ fun ARCameraScreen(modifier: Modifier) {
         //NavigationDrawer()
     }
 
-    LaunchedEffect(true) {
+    LaunchedEffect(isWithinGeoFence) {
         // Load and set the 3D model (GLB) for the ArModelNode within a coroutine
-        val modelNode = arModelNodes.value
-        if (modelNode != null) {
-            withContext(Dispatchers.IO) {
-                modelNode.loadModelGlb(
-                    context = context,
-                    glbFileLocation = "file:///android_asset/treasure_chest.glb",
-                    autoAnimate = true
-                )
+        if (isWithinGeoFence) {
+            val modelNode = arModelNodes.value
+            if (modelNode != null) {
+                withContext(Dispatchers.IO) {
+                    modelNode.loadModelGlb(
+                        context = context,
+                        glbFileLocation = "file:///android_asset/treasure_chest.glb",
+                        autoAnimate = true
+                    )
+                }
             }
         }
     }
