@@ -5,20 +5,19 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.shegs.artreasurehunt.data.models.User
 import com.shegs.artreasurehunt.data.network.request_and_response_models.AuthRequest
-import com.shegs.artreasurehunt.data.network.request_and_response_models.Resource
+import com.shegs.artreasurehunt.data.network.request_and_response_models.NetworkResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
-import retrofit2.HttpException
 import javax.inject.Inject
 
 class ARTreasureHuntService @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val firebaseAuth: FirebaseAuth
 ) {
-    suspend fun signUp(authRequest: AuthRequest): Flow<Resource<User>> {
+    suspend fun signUp(authRequest: AuthRequest): Flow<NetworkResult<User>> {
         return flow {
-            emit(Resource.Loading)
+            emit(NetworkResult.Loading())
             try {
                 val request = AuthRequest(
                     email = authRequest.email,
@@ -28,8 +27,8 @@ class ARTreasureHuntService @Inject constructor(
                 println(request)
                 val authResult =
                     firebaseAuth.createUserWithEmailAndPassword(
-                        request.email!!,
-                        request.password!!
+                        request.email,
+                        request.password
                     )
                 if (authResult.isSuccessful) {
                     val user = authRequest.userName?.let {
@@ -41,19 +40,19 @@ class ARTreasureHuntService @Inject constructor(
                     }
                     val userDocumentRef = user!!.id?.let { firestore.collection("users").document(it) }
                     userDocumentRef?.set(user)?.await()
-                    emit(Resource.Success(user))
+                    emit(NetworkResult.Success(user))
 
 
                 }
             } catch (e: Exception) {
                 Log.e("exception", e.message.toString())
-            } catch (e: HttpException) {
-                emit(Resource.Error(e.message ?: "An error occurred"))
+            } catch (e: Throwable) {
+                emit(NetworkResult.Error(e))
             }
         }
     }
 
-    suspend fun login(authRequest: AuthRequest):Flow<Resource<User>> {
+    suspend fun login(authRequest: AuthRequest):Flow<NetworkResult<User>> {
         return flow {
 
         }
