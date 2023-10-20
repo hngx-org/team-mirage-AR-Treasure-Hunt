@@ -1,4 +1,3 @@
-
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,6 +33,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,7 +54,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.shegs.artreasurehunt.data.network.request_and_response_models.AuthRequest
-import com.shegs.artreasurehunt.data.network.request_and_response_models.Resource
+import com.shegs.artreasurehunt.data.network.request_and_response_models.NetworkResult
 import com.shegs.artreasurehunt.navigation.NestedNavItem
 import com.shegs.artreasurehunt.ui.common.CustomRoundedButton
 import com.shegs.artreasurehunt.ui.common.RoundedTextField
@@ -104,6 +104,11 @@ fun SignUpScreenContent(
     var password by remember {
         mutableStateOf("")
     }
+    val btnEnabled by remember {
+        derivedStateOf {
+            email.isNotEmpty() && password.isNotEmpty() && userName.isNotEmpty()
+        }
+    }
 
     val signUpFlow = viewModel.signUpFlow.collectAsState().value
 
@@ -147,6 +152,9 @@ fun SignUpScreenContent(
                     .padding(top = 32.dp),
                 horizontalAlignment = Alignment.Start
             ) {
+                if (!btnEnabled)
+                    Text(text = "Fields cannot be empty")
+
                 Text(
                     text = "User Name",
                     fontWeight = FontWeight(400),
@@ -253,7 +261,7 @@ fun SignUpScreenContent(
         item {
             CustomRoundedButton(
                 label = "Sign Up",
-                enabled = email.isNotEmpty() && password.isNotEmpty() && userName.isNotEmpty(),
+                enabled = btnEnabled,
                 modifier = Modifier
                     .fillMaxWidth(),
                 filled = true,
@@ -304,13 +312,13 @@ fun SignUpScreenContent(
         item {
             signUpFlow.let {
                 when (it) {
-                    is Resource.Error -> {
+                    is NetworkResult.Error -> {
                         LaunchedEffect(snackbarHostState) {
                             snackbarHostState.showSnackbar("an error occured")
                         }
                     }
 
-                    is Resource.Loading -> {
+                    is NetworkResult.Loading -> {
                         Box(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
@@ -319,7 +327,7 @@ fun SignUpScreenContent(
                         }
                     }
 
-                    is Resource.Success -> {
+                    is NetworkResult.Success -> {
                         navController.navigate(NestedNavItem.SignInScreen.route)
                         LaunchedEffect(snackbarHostState) {
                             snackbarHostState.showSnackbar("sign up successful")

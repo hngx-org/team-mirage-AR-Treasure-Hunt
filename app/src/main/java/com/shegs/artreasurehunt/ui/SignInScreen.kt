@@ -32,6 +32,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,7 +54,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.shegs.artreasurehunt.data.network.request_and_response_models.AuthRequest
-import com.shegs.artreasurehunt.data.network.request_and_response_models.Resource
+import com.shegs.artreasurehunt.data.network.request_and_response_models.NetworkResult
 import com.shegs.artreasurehunt.navigation.NestedNavItem
 import com.shegs.artreasurehunt.ui.common.CustomRoundedButton
 import com.shegs.artreasurehunt.ui.common.RoundedTextField
@@ -105,6 +106,11 @@ fun SignInScreenContent(
         mutableStateOf("")
     }
 
+    val btnEnabled by remember {
+        derivedStateOf {
+            email.isNotEmpty() && password.isNotEmpty()
+        }
+    }
 
     val focusManager = LocalFocusManager.current
     LazyColumn(
@@ -142,6 +148,9 @@ fun SignInScreenContent(
                     .padding(top = 50.dp),
                 horizontalAlignment = Alignment.Start
             ) {
+                if (!btnEnabled)
+                    Text(text = "Fields cannot be empty")
+
                 Text(
                     text = "Email Address",
                     fontWeight = FontWeight(400),
@@ -227,7 +236,7 @@ fun SignInScreenContent(
         item {
             CustomRoundedButton(
                 label = "Sign In",
-                enabled = email.isNotEmpty() && password.isNotEmpty(),
+                enabled = btnEnabled,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 30.dp),
@@ -277,13 +286,13 @@ fun SignInScreenContent(
         item {
             loginFlow.let {
                 when (it) {
-                    is Resource.Error -> {
+                    is NetworkResult.Error -> {
                         LaunchedEffect(snackbarHostState) {
                             snackbarHostState.showSnackbar("login error")
                         }
                     }
 
-                    Resource.Loading -> {
+                    is NetworkResult.Loading -> {
                         Box(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
@@ -292,7 +301,7 @@ fun SignInScreenContent(
                         }
                     }
 
-                    is Resource.Success -> {
+                    is NetworkResult.Success -> {
                         LaunchedEffect(snackbarHostState) {
                             navController.navigate(NestedNavItem.HomeScreen.route)
                             snackbarHostState.showSnackbar("login successful")
