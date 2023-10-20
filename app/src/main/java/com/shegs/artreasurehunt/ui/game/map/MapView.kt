@@ -56,7 +56,7 @@ import com.shegs.artreasurehunt.viewmodels.MapViewModel
     when {
         permissionState.allPermissionsGranted -> {
             LaunchedEffect(Unit) {
-                mapViewModel.processEvent(PermissionEvent.Granted)
+                mapViewModel.processEvent(PermissionEvent.Granted, context = context)
             }
         }
 
@@ -69,7 +69,7 @@ import com.shegs.artreasurehunt.viewmodels.MapViewModel
 
         !permissionState.allPermissionsGranted && !permissionState.shouldShowRationale -> {
             LaunchedEffect(Unit) {
-                mapViewModel.processEvent(PermissionEvent.Revoked)
+                mapViewModel.processEvent(PermissionEvent.Revoked, context = context)
             }
         }
     }
@@ -125,9 +125,7 @@ import com.shegs.artreasurehunt.viewmodels.MapViewModel
                     modifier = modifier,
                     cameraPositionState = cameraState,
                     currentPosition = currentLoc,
-                    state = mapViewModel.state.value,
-                    setupClusterManager = mapViewModel::setupClusterManager,
-                    calculateZoneViewCenter = mapViewModel::calculateZoneLatLngBounds,
+                    treasureCircles = mapViewModel.treasureHuntCircles ?: emptyList()
                 )
             }
         }

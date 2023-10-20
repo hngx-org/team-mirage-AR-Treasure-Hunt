@@ -52,7 +52,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.shegs.artreasurehunt.data.network.request_and_response_models.AuthRequest
 import com.shegs.artreasurehunt.data.network.request_and_response_models.Resource
 import com.shegs.artreasurehunt.navigation.NestedNavItem
@@ -125,13 +124,13 @@ fun SignInScreenContent(
                     text = "Welcome back !",
                     fontWeight = FontWeight(500),
                     style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.scrim
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
                 Text(
                     text = "Sign in to access your account",
                     fontWeight = FontWeight(400),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.scrim.copy(0.6f)
+                    color = Color(0xFFFFFFFF)
                 )
             }
         }
@@ -147,7 +146,7 @@ fun SignInScreenContent(
                     text = "Email Address",
                     fontWeight = FontWeight(400),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.scrim.copy(0.6f)
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 RoundedTextField(
@@ -176,7 +175,7 @@ fun SignInScreenContent(
                     text = "Password",
                     fontWeight = FontWeight(400),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.scrim.copy(0.6f)
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 TextField(
@@ -188,7 +187,7 @@ fun SignInScreenContent(
                             text = "Password",
                             fontWeight = FontWeight(400),
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.scrim.copy(0.6f)
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
                     },
                     leadingIcon = {
@@ -256,7 +255,7 @@ fun SignInScreenContent(
                         style = TextStyle(
                             fontSize = 14.sp,
                             fontWeight = FontWeight(200),
-                            color = Color(0xFF000000),
+                            color = MaterialTheme.colorScheme.onPrimary,
                         )
                     )
                     Spacer(modifier = Modifier.padding(horizontal = 2.dp))
@@ -268,7 +267,7 @@ fun SignInScreenContent(
                         style = TextStyle(
                             fontSize = 14.sp,
                             fontWeight = FontWeight(500),
-                            color = Color(0xFF000000),
+                            color = MaterialTheme.colorScheme.onPrimary,
                         )
                     )
                 }

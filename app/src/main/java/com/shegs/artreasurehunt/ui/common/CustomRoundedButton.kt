@@ -54,7 +54,9 @@ fun CustomRoundedButton(
             modifier = Modifier
                 .padding(vertical = 8.dp),
             fontWeight = FontWeight(500),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.onPrimary
+            ),
         )
     }
 }
