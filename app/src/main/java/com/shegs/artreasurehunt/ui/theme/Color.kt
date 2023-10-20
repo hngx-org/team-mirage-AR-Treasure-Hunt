@@ -17,4 +17,8 @@ val md_theme_dark_scrim = Color(0xFF000000)
 val deep_gold = Color(0xFFb55122)
 
 val OrangePrimary = Color(0xFFC75119)
+val Secondary = Color(0xFF7b522b)
 val LightOrange = Color(0xFFF8B89A)
+val LightOrangePrimary = Color(0xFFFFA163)  // Lighter OrangePrimary
+val LightSecondary = Color(0xFFA57754)      // Lighter Secondary
+val LightLightOrange = Color(0xFFFFD0B6)
