@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -39,12 +40,16 @@ fun GameScreen() {
         }
     }
 
+    val isWithinGeofence = mapViewModel.isWithinGeofence.collectAsState().value
+
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
         ARCameraScreen(
+            isWithinGeoFence = isWithinGeofence,
             modifier = Modifier
-                .weight(1f)
+                .weight(1f),
         )
         MapView(
             mapViewModel = mapViewModel, context = context,

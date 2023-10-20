@@ -36,11 +36,14 @@ const val GEOFENCE_RADIUS = 1000.0
 @HiltViewModel
 class MapViewModel @Inject constructor(
     private val locationRepository: LocationRepository,
+    private val leaderBoardViewModel: LeaderBoardViewModel
 ) : ViewModel() {
 
     private val _viewState: MutableStateFlow<ViewState> = MutableStateFlow(ViewState.Loading)
     val viewState = _viewState.asStateFlow()
 
+    private val _isWithinGeoFence = MutableStateFlow(false)
+    val isWithinGeofence = _isWithinGeoFence.asStateFlow()
     var treasureHuntCircles: List<TreasureCircleData>? = null
 
     fun processEvent(event: PermissionEvent, context: Context) {
@@ -134,6 +137,12 @@ class MapViewModel @Inject constructor(
 
         if (distanceInMeters < radius) {
             //Todo add broadcast receiver
+            _isWithinGeoFence.update { true }
+            if(_isWithinGeoFence.value){
+                viewModelScope.launch {
+                    leaderBoardViewModel.saveUserScore()
+                }
+            }
             Toast.makeText(context, "Within GeoFence", Toast.LENGTH_LONG).show()
         }
 
