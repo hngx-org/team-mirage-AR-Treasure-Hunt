@@ -1,11 +1,11 @@
 package com.shegs.artreasurehunt.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shegs.artreasurehunt.data.models.LeaderBoardModel
 import com.shegs.artreasurehunt.data.network.request_and_response_models.Resource
 import com.shegs.artreasurehunt.data.repositories.NetworkRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -40,6 +40,10 @@ class LeaderBoardViewModel @Inject constructor(
             _leaderBoardFlow.value = Resource.Loading
             val result = repository.fetchLeaderBoard()
             _leaderBoardFlow.value = result
+            if(result is Resource.Error){
+                val errorMessage = result.message
+                Log.e("LeaderBoard Error",errorMessage)
+            }
         }
     }
 

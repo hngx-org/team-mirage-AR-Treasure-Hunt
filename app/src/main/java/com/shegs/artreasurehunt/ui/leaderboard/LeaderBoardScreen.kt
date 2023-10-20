@@ -2,7 +2,7 @@ package com.shegs.artreasurehunt.ui.leaderboard
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -45,9 +45,6 @@ fun LeaderBoardScreen(viewModel: LeaderBoardViewModel, navController: NavControl
     val snackBarHostState = remember {
         SnackbarHostState()
     }
-
-    val leaderBoard: List<LeaderBoardModel> by viewModel.leaderBoard.collectAsState(emptyList())
-
     Scaffold(
         topBar = {
             TopAppBar(title = { Text("LeaderBoard") }, navigationIcon = {
@@ -62,7 +59,7 @@ fun LeaderBoardScreen(viewModel: LeaderBoardViewModel, navController: NavControl
             SnackbarHost(snackBarHostState)
         }
     ) {
-        LeaderBoardListScreen(viewModel, leaderBoard, snackBarHostState)
+        LeaderBoardListScreen(viewModel, snackBarHostState)
     }
 
 }
@@ -70,7 +67,6 @@ fun LeaderBoardScreen(viewModel: LeaderBoardViewModel, navController: NavControl
 @Composable
 fun LeaderBoardListScreen(
     viewModel: LeaderBoardViewModel,
-    leaderBoard: List<LeaderBoardModel>,
     snackbarHostState: SnackbarHostState,
 ) {
     val leaderBoardState by viewModel.leaderBoardFlow.collectAsState()
@@ -120,49 +116,54 @@ fun LeaderBoardListScreen(
 
 @Composable
 fun LeaderBoardItem(leaderBoard: LeaderBoardModel) {
-    Row {
-        Text(
-            text = "Player Name",
-            textAlign = TextAlign.Start,
-            color = MaterialTheme.colorScheme.onPrimary,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            fontSize = 12.sp,
-            fontFamily = FontFamily(Font(R.font.poppins_medium)),
-            lineHeight = 16.sp
-        )
+    Box {
+        Column {
+            Text(
+                text = "Player Name",
+                textAlign = TextAlign.Start,
+                color = MaterialTheme.colorScheme.onPrimary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                fontSize = 12.sp,
+                fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                lineHeight = 16.sp
+            )
 
-        Text(
-            text = "Score",
-            textAlign = TextAlign.Start,
-            color = MaterialTheme.colorScheme.onPrimary,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            fontSize = 12.sp,
-            fontFamily = FontFamily(Font(R.font.poppins_medium)),
-            lineHeight = 16.sp
-        )
+            Text(
+                text = "Score",
+                textAlign = TextAlign.Start,
+                color = MaterialTheme.colorScheme.onPrimary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                fontSize = 12.sp,
+                fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                lineHeight = 16.sp
+            )
+        }
 
-        Text(
-            text = leaderBoard.email,
-            textAlign = TextAlign.Start,
-            color = MaterialTheme.colorScheme.onPrimary,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            fontSize = 12.sp,
-            fontFamily = FontFamily(Font(R.font.poppins_medium)),
-            lineHeight = 16.sp
-        )
+        Column {
+            Text(
+                text = leaderBoard.email,
+                textAlign = TextAlign.Start,
+                color = MaterialTheme.colorScheme.onPrimary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                fontSize = 12.sp,
+                fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                lineHeight = 16.sp
+            )
 
-        Text(
-            text = leaderBoard.score.toString(),
-            textAlign = TextAlign.Start,
-            color = MaterialTheme.colorScheme.onPrimary,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            fontSize = 12.sp,
-            fontFamily = FontFamily(Font(R.font.poppins_medium)),
-            lineHeight = 16.sp
-        )
+            Text(
+                text = leaderBoard.score.toString(),
+                textAlign = TextAlign.Start,
+                color = MaterialTheme.colorScheme.onPrimary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                fontSize = 12.sp,
+                fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                lineHeight = 16.sp
+            )
+        }
     }
+
 }
