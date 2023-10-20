@@ -9,13 +9,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -25,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -45,15 +51,15 @@ fun LeaderBoardScreen(viewModel: LeaderBoardViewModel, navController: NavControl
         SnackbarHostState()
     }
     Scaffold(
-//        topBar = {
-//            TopAppBar(title = { Text("LeaderBoard") }, navigationIcon = {
-//                IconButton(onClick = {
-//                    navController.popBackStack()
-//                }) {
-//                    Icon(Icons.Filled.ArrowBack, contentDescription = null)
-//                }
-//            })
-//        },
+        topBar = {
+            TopAppBar(title = { Text("LeaderBoard") }, navigationIcon = {
+                IconButton(onClick = {
+                    navController.popBackStack()
+                }) {
+                    Icon(Icons.Filled.ArrowBack, contentDescription = null)
+                }
+            })
+        },
         snackbarHost = {
             SnackbarHost(snackBarHostState)
         }
@@ -97,7 +103,9 @@ fun LeaderBoardListScreen(
                     Text("start playing the game to earn points.")
                 }
             } else {
-                LazyColumn {
+                LazyColumn(
+                    modifier = Modifier.padding(all = 20.dp)
+                ) {
                     item{
                         Row(
                             modifier = Modifier.padding(all = 12.dp),
@@ -108,18 +116,20 @@ fun LeaderBoardListScreen(
                                 color = MaterialTheme.colorScheme.onPrimary,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
-                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp,
                                 fontFamily = FontFamily(Font(R.font.poppins_medium)),
                                 lineHeight = 16.sp
                             )
-                            Spacer(modifier = Modifier.width(8.dp))
+                            Spacer(modifier = Modifier.width(130.dp))
                             Text(
                                 text = "score",
                                 textAlign = TextAlign.Start,
                                 color = MaterialTheme.colorScheme.onPrimary,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
-                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp,
                                 fontFamily = FontFamily(Font(R.font.poppins_medium)),
                                 lineHeight = 16.sp
                             )
