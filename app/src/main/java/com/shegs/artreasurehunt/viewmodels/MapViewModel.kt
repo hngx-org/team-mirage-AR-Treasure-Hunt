@@ -42,6 +42,8 @@ class MapViewModel @Inject constructor(
     val viewState = _viewState.asStateFlow()
 
     var treasureHuntCircles: List<TreasureCircleData>? = null
+    private val _isWithinGeoFence = MutableStateFlow(false)
+    val isWithinGeofence = _isWithinGeoFence.asStateFlow()
 
     fun processEvent(event: PermissionEvent, context: Context) {
         when (event) {
@@ -135,6 +137,7 @@ class MapViewModel @Inject constructor(
         if (distanceInMeters < radius) {
             //Todo add broadcast receiver
             Toast.makeText(context, "Within GeoFence", Toast.LENGTH_LONG).show()
+            _isWithinGeoFence.update { true }
         }
 
     }
