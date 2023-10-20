@@ -1,8 +1,9 @@
 package com.shegs.artreasurehunt.ui.leaderboard
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -116,32 +117,9 @@ fun LeaderBoardListScreen(
 
 @Composable
 fun LeaderBoardItem(leaderBoard: LeaderBoardModel) {
-    Box {
-        Column {
-            Text(
-                text = "Player Name",
-                textAlign = TextAlign.Start,
-                color = MaterialTheme.colorScheme.onPrimary,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                fontSize = 12.sp,
-                fontFamily = FontFamily(Font(R.font.poppins_medium)),
-                lineHeight = 16.sp
-            )
-
-            Text(
-                text = "Score",
-                textAlign = TextAlign.Start,
-                color = MaterialTheme.colorScheme.onPrimary,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                fontSize = 12.sp,
-                fontFamily = FontFamily(Font(R.font.poppins_medium)),
-                lineHeight = 16.sp
-            )
-        }
-
-        Column {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(
                 text = leaderBoard.email,
                 textAlign = TextAlign.Start,
@@ -154,7 +132,7 @@ fun LeaderBoardItem(leaderBoard: LeaderBoardModel) {
             )
 
             Text(
-                text = leaderBoard.score.toString(),
+                text = "${leaderBoard.score}",
                 textAlign = TextAlign.Start,
                 color = MaterialTheme.colorScheme.onPrimary,
                 maxLines = 1,
@@ -164,6 +142,5 @@ fun LeaderBoardItem(leaderBoard: LeaderBoardModel) {
                 lineHeight = 16.sp
             )
         }
-    }
 
 }
