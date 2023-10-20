@@ -41,7 +41,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.Font
@@ -206,7 +205,7 @@ fun HomeScreen(
                     modifier = Modifier.padding(8.dp),
                     shape = MaterialTheme.shapes.medium,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFC75119),
+                        containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary
                     )
                 ) {
@@ -222,7 +221,7 @@ fun HomeScreen(
                     modifier = Modifier.padding(4.dp),
                     shape = MaterialTheme.shapes.medium,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF7b522b),
+                        containerColor = MaterialTheme.colorScheme.secondary,
                         contentColor = MaterialTheme.colorScheme.onPrimary
                     )
                 ) {
@@ -236,7 +235,7 @@ fun HomeScreen(
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(25))
-                        .background(color = Color(0xFFC75119))
+                        .background(color =  MaterialTheme.colorScheme.primary)
                         .padding(6.dp),
                     content = {
                         IconButton(
