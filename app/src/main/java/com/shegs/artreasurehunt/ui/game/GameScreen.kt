@@ -11,14 +11,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.shegs.artreasurehunt.R
 import com.shegs.artreasurehunt.ui.game.ar.ARCameraScreen
 import com.shegs.artreasurehunt.ui.game.map.MapView
-import com.shegs.artreasurehunt.viewmodels.LeaderBoardViewModel
 import com.shegs.artreasurehunt.viewmodels.MapViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun GameScreen(leaderBoardViewModel: LeaderBoardViewModel) {
+fun GameScreen() {
     val mapViewModel: MapViewModel = hiltViewModel()
 
     val context = LocalContext.current
@@ -45,8 +44,7 @@ fun GameScreen(leaderBoardViewModel: LeaderBoardViewModel) {
     ) {
         ARCameraScreen(
             modifier = Modifier
-                .weight(1f),
-            viewModel = leaderBoardViewModel
+                .weight(1f)
         )
         MapView(
             mapViewModel = mapViewModel, context = context,
