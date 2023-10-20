@@ -2,8 +2,12 @@ package com.shegs.artreasurehunt.ui.states
 
 
 data class SignUpUIState(
-    val email: String = "",
-    val password: String = "",
+    val emailLogin: String = "",
     val userName: String = "",
-    val loading: Boolean = false
+    val passwordLogin: String = "",
+    val userNameSignUp: String = "",
+    val passwordSignUp: String = "",
+    val isLoading: Boolean = false,
+    val signUpError: String? = null,
+    val loginError: String? = null,
 )
