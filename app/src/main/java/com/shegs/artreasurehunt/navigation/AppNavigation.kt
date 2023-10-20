@@ -21,7 +21,9 @@ import com.shegs.artreasurehunt.ui.SettingScreen
 import com.shegs.artreasurehunt.ui.arena.ArenaScreen
 import com.shegs.artreasurehunt.ui.game.GameScreen
 import com.shegs.artreasurehunt.ui.getVideoUri
+import com.shegs.artreasurehunt.ui.leaderboard.LeaderBoardScreen
 import com.shegs.artreasurehunt.viewmodels.ArenaViewModel
+import com.shegs.artreasurehunt.viewmodels.LeaderBoardViewModel
 import com.shegs.artreasurehunt.viewmodels.NetworkViewModel
 import com.shegs.artreasurehunt.viewmodels.SettingsViewModel
 
@@ -31,6 +33,7 @@ import com.shegs.artreasurehunt.viewmodels.SettingsViewModel
 fun Navigation(
     navController: NavHostController,
     networkViewModel: NetworkViewModel,
+    viewModel: LeaderBoardViewModel,
     arenaViewModel: ArenaViewModel,
     settingsViewModel: SettingsViewModel,
     modifier: Modifier = Modifier
@@ -78,13 +81,25 @@ fun Navigation(
         }
 
         composable(NestedNavItem.GameScreen.route) {
-            GameScreen()
+            GameScreen(leaderBoardViewModel = viewModel)
         }
 
-        composable(NestedNavItem.ArenaScreen.route){
+        composable(NestedNavItem.ArenaScreen.route) {
 
             // Render the ArenaScreen with updated 'arenas' data
             ArenaScreen(arenaViewModel = arenaViewModel, navController)
+        }
+
+        composable(
+            route = NestedNavItem.LeaderBoardScreen.route,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(700)
+                )
+            },
+        ) {
+            LeaderBoardScreen(viewModel = viewModel, navController = navController)
         }
 
         composable(

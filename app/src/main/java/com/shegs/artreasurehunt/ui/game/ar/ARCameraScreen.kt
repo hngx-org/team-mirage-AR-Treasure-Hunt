@@ -2,7 +2,6 @@ package com.shegs.artreasurehunt.ui.game.ar
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
@@ -13,6 +12,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.shegs.artreasurehunt.viewmodels.LeaderBoardViewModel
 import io.github.sceneview.ar.ARScene
 import io.github.sceneview.ar.node.ArModelNode
 import io.github.sceneview.ar.node.ArNode
@@ -25,7 +25,7 @@ import kotlinx.coroutines.withContext
 
 @SuppressLint("RememberReturnType", "SuspiciousIndentation")
 @Composable
-fun ARCameraScreen(modifier: Modifier) {
+fun ARCameraScreen(modifier: Modifier, viewModel: LeaderBoardViewModel) {
     val arModelNodes = remember { mutableStateOf<ArModelNode?>(null) }
     val nodes = remember { mutableListOf<ArNode>() }
     val context = LocalContext.current
@@ -68,6 +68,7 @@ fun ARCameraScreen(modifier: Modifier) {
             },
             onTap = { hitResult ->
                 // Handle user interactions in AR
+
             }
         )
         //AnimatedColumn(navController)

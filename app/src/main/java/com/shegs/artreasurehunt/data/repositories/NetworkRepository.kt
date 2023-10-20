@@ -7,6 +7,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.shegs.artreasurehunt.data.models.ArenaModel
+import com.shegs.artreasurehunt.data.models.LeaderBoardModel
 import com.shegs.artreasurehunt.data.models.User
 import com.shegs.artreasurehunt.data.network.request_and_response_models.AuthRequest
 import com.shegs.artreasurehunt.data.network.request_and_response_models.Resource
@@ -79,6 +80,38 @@ class NetworkRepository @Inject constructor(
             Resource.Success(Unit)
         } catch (e: Exception) {
             e.printStackTrace()
+            Resource.Error(e.message!!)
+        }
+    }
+
+    suspend fun saveUserScore(leaderBoard: LeaderBoardModel): Resource<Unit> {
+        return try {
+            Resource.Loading
+
+            val leaderBoardCollection = firestore.collection("leaderboard")
+
+            leaderBoardCollection.add(leaderBoard).await()
+
+            Resource.Success(Unit)
+        } catch (e: Exception) {
+            Resource.Error(e.message!!)
+        }
+    }
+
+    suspend fun fetchLeaderBoard(): Resource<List<LeaderBoardModel>> {
+        return try {
+            Resource.Loading
+
+            val leaderBoardCollection = firestore.collection("leaderboard")
+            val snapshot = leaderBoardCollection.get().await()
+
+            val leaderBoard = snapshot.documents.mapNotNull { document ->
+                document.toObject(LeaderBoardModel::class.java)
+            }
+
+            Resource.Success(leaderBoard)
+
+        } catch (e: Exception) {
             Resource.Error(e.message!!)
         }
     }

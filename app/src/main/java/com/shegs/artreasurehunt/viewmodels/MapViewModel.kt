@@ -36,10 +36,13 @@ const val GEOFENCE_RADIUS = 1000.0
 @HiltViewModel
 class MapViewModel @Inject constructor(
     private val locationRepository: LocationRepository,
+    private val leaderBoardViewModel: LeaderBoardViewModel,
 ) : ViewModel() {
 
     private val _viewState: MutableStateFlow<ViewState> = MutableStateFlow(ViewState.Loading)
     val viewState = _viewState.asStateFlow()
+
+    private var hasSavedUserScore = false
 
     var treasureHuntCircles: List<TreasureCircleData>? = null
 
@@ -132,9 +135,14 @@ class MapViewModel @Inject constructor(
         val distanceInMeters =
             SphericalUtil.computeDistanceBetween(userLocationLatLng, geoFenceLatLng)
 
-        if (distanceInMeters < radius) {
+        if (distanceInMeters < radius && !hasSavedUserScore) {
             //Todo add broadcast receiver
+            hasSavedUserScore = true
             Toast.makeText(context, "Within GeoFence", Toast.LENGTH_LONG).show()
+            viewModelScope.launch {
+                leaderBoardViewModel.saveUserScore()
+            }
+
         }
 
     }
