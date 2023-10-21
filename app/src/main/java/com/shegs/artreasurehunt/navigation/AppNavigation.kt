@@ -2,8 +2,6 @@ package com.shegs.artreasurehunt.navigation
 
 import SignInScreen
 import SignUpScreen
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
@@ -18,7 +16,6 @@ import com.shegs.artreasurehunt.ui.DataRulesScreen
 import com.shegs.artreasurehunt.ui.HomeScreen
 import com.shegs.artreasurehunt.ui.ProfileScreen
 import com.shegs.artreasurehunt.ui.SettingScreen
-import com.shegs.artreasurehunt.ui.arena.ArenaScreen
 import com.shegs.artreasurehunt.ui.game.GameScreen
 import com.shegs.artreasurehunt.ui.getVideoUri
 import com.shegs.artreasurehunt.viewmodels.ArenaViewModel
@@ -26,7 +23,7 @@ import com.shegs.artreasurehunt.viewmodels.NetworkViewModel
 import com.shegs.artreasurehunt.viewmodels.SettingsViewModel
 
 
-@RequiresApi(Build.VERSION_CODES.Q)
+//@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun Navigation(
     navController: NavHostController,
@@ -84,7 +81,7 @@ fun Navigation(
         composable(NestedNavItem.ArenaScreen.route){
 
             // Render the ArenaScreen with updated 'arenas' data
-            ArenaScreen(arenaViewModel = arenaViewModel, navController)
+          //  ArenaScreen(arenaViewModel = arenaViewModel, navController)
         }
 
         composable(
