@@ -59,7 +59,7 @@ fun CreateArenaDialog(
     ) {
         Surface(
             shape = RoundedCornerShape(16.dp),
-            color = MaterialTheme.colorScheme.primaryContainer
+            color = MaterialTheme.colorScheme.tertiary
         ) {
             Box(
                 modifier = Modifier
@@ -82,10 +82,15 @@ fun CreateArenaDialog(
                                 ),
                                 shape = RoundedCornerShape(20)
                             ),
-                        colors = TextFieldDefaults.textFieldColors(
-                            containerColor = Color.Transparent,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            disabledContainerColor = Color.Transparent,
+                            cursorColor = MaterialTheme.colorScheme.secondary,
+                            focusedTextColor = MaterialTheme.colorScheme.secondary,
+                            unfocusedTextColor = MaterialTheme.colorScheme.primary,
+                            focusedIndicatorColor = MaterialTheme.colorScheme.tertiary,
+                            unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary,
                         ),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next),
                         value = arenaName,
@@ -114,10 +119,15 @@ fun CreateArenaDialog(
                                 ),
                                 shape = RoundedCornerShape(20)
                             ),
-                        colors = TextFieldDefaults.textFieldColors(
-                            containerColor = Color.Transparent,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            disabledContainerColor = Color.Transparent,
+                            cursorColor = MaterialTheme.colorScheme.secondary,
+                            focusedTextColor = MaterialTheme.colorScheme.secondary,
+                            unfocusedTextColor = MaterialTheme.colorScheme.primary,
+                            focusedIndicatorColor = MaterialTheme.colorScheme.tertiary,
+                            unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary,
                         ),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next),
                         value = arenaDescription,
@@ -145,10 +155,15 @@ fun CreateArenaDialog(
                                 ),
                                 shape = RoundedCornerShape(20)
                             ),
-                        colors = TextFieldDefaults.textFieldColors(
-                            containerColor = Color.Transparent,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            disabledContainerColor = Color.Transparent,
+                            cursorColor = MaterialTheme.colorScheme.secondary,
+                            focusedTextColor = MaterialTheme.colorScheme.secondary,
+                            unfocusedTextColor = MaterialTheme.colorScheme.primary,
+                            focusedIndicatorColor = MaterialTheme.colorScheme.tertiary,
+                            unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary,
                         ),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                         value = arenaLocation,
