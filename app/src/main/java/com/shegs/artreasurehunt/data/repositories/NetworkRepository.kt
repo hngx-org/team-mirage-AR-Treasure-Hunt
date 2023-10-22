@@ -48,8 +48,8 @@ class NetworkRepository @Inject constructor(
             )
 
             // Save user data to Firestore
-            val userDocumentRef = arenasDB.document(authResult.user!!.uid)
-            userDocumentRef.set(userData!!).await()
+           // val userDocumentRef = arenasDB.document(authResult.user!!.uid)
+          //  userDocumentRef.set(userData!!).await()
 
             onComplete(true) // Signal success after both signup and data save
         } else {

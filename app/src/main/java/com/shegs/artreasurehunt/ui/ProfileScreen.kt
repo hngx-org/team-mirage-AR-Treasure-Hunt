@@ -44,7 +44,6 @@ fun ProfileScreen(
     modifier: Modifier = Modifier,
     emailAddress: String,
     userName: String,
-    email:String,
     onSignOutClick: () -> Unit,
     onDeleteAccount: () -> Unit,
     onBack: () -> Unit,

@@ -40,6 +40,10 @@ fun GameScreen() {
         }
     }
     val isWithinGeofence = mapViewModel.isWithinGeofence.collectAsState().value
+    val currentTreasures = mapViewModel.foundTreasuresCount.collectAsState().value
+    val totalTreasures = mapViewModel.totalTreasuresCount.collectAsState().value
+    val userScore = mapViewModel.userScore.collectAsState().value
+
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -47,7 +51,11 @@ fun GameScreen() {
         ARCameraScreen(
             modifier = Modifier
                 .weight(1f),
-            isWithinGeoFence = isWithinGeofence
+            isWithinGeoFence = isWithinGeofence,
+            foundTreasures = currentTreasures,
+            totalTreasures = totalTreasures ?:0,
+            userScore = userScore,
+            updateGameStatus = mapViewModel::updateGameState
         )
         MapView(
             mapViewModel = mapViewModel, context = context,

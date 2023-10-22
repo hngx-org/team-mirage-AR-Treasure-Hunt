@@ -1,6 +1,8 @@
 package com.shegs.artreasurehunt.navigation
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
@@ -20,6 +22,7 @@ import com.shegs.artreasurehunt.ui.ProfileScreen
 import com.shegs.artreasurehunt.ui.SettingScreen
 import com.shegs.artreasurehunt.ui.SignInScreen
 import com.shegs.artreasurehunt.ui.SignUpScreen
+import com.shegs.artreasurehunt.ui.arena.ArenaScreen
 import com.shegs.artreasurehunt.ui.game.GameScreen
 import com.shegs.artreasurehunt.ui.getVideoUri
 import com.shegs.artreasurehunt.viewmodels.ArenaViewModel
@@ -29,7 +32,7 @@ import com.shegs.artreasurehunt.viewmodels.SignInViewModel
 import com.shegs.artreasurehunt.viewmodels.SignUpViewModel
 
 
-//@RequiresApi(Build.VERSION_CODES.Q)
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun Navigation(
     modifier: Modifier = Modifier,
@@ -108,11 +111,45 @@ fun Navigation(
 
             val soundState = settingsViewModel.soundSettings.collectAsState().value
 
+            val onProfileClick = remember {
+                {
+                    navController.navigate(NestedNavItem.ProfileScreen.route)
+                }
+            }
+
+            val onLeaderBoardClick = remember {
+                {
+                    navController.navigate(NestedNavItem.LeaderBoardScreen.route)
+                }
+            }
+
+            val onSettingsClick = remember {
+                {
+                    navController.navigate(NestedNavItem.SettingsScreen.route)
+                }
+            }
+
+            val onDataRulesClick = remember {
+                {
+                    navController.navigate(NestedNavItem.DataRulesScreen.route)
+                }
+            }
+
+            val onStartHuntingClick = remember {
+                {
+                    navController.navigate(NestedNavItem.ArenaScreen.route)
+                }
+            }
+
             HomeScreen(
-                navController,
                 videoUri,
                 hasSound = soundState.isSoundOn,
-                volume = soundState.soundLevel
+                volume = soundState.soundLevel,
+                onProfileClick = onProfileClick,
+                onLeaderBoardClick = onLeaderBoardClick,
+                onSettingsClick = onSettingsClick,
+                onDataRulesClick = onDataRulesClick,
+                onStartHuntingClick = onStartHuntingClick
             )
             //ARCameraScreen(navController)
         }
@@ -124,7 +161,7 @@ fun Navigation(
         composable(NestedNavItem.ArenaScreen.route) {
 
             // Render the ArenaScreen with updated 'arenas' data
-            //  ArenaScreen(arenaViewModel = arenaViewModel, navController)
+             ArenaScreen(arenaViewModel = arenaViewModel, navController)
         }
 
         composable(
@@ -174,7 +211,6 @@ fun Navigation(
                 userName = userData.userName,
                 onSignOutClick = onSignOutClicked,
                 onBack = onBack,
-                email = signInViewModel.hasUser ?:"empty",
                 onDeleteAccount = deleteClicked
             )
         }
