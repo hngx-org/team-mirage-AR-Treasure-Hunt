@@ -1,5 +1,5 @@
-import android.annotation.SuppressLint
-import androidx.compose.foundation.clickable
+package com.shegs.artreasurehunt.ui
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -20,7 +21,6 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -28,21 +28,19 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -51,21 +49,18 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import com.shegs.artreasurehunt.data.network.request_and_response_models.AuthRequest
-import com.shegs.artreasurehunt.data.network.request_and_response_models.NetworkResult
-import com.shegs.artreasurehunt.navigation.NestedNavItem
 import com.shegs.artreasurehunt.ui.common.CustomRoundedButton
 import com.shegs.artreasurehunt.ui.common.RoundedTextField
-import com.shegs.artreasurehunt.viewmodels.NetworkViewModel
+import com.shegs.artreasurehunt.ui.states.OnboardingUIState
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun SignUpScreen(
-    navController: NavController,
-    viewModel: NetworkViewModel = hiltViewModel(),
+    modifier: Modifier = Modifier,
+    signUpState: OnboardingUIState,
+    updateState: (OnboardingUIState) -> Unit,
+    signUpClicked: () -> Unit,
+    navigateToSignIn:() -> Unit,
 ) {
     val snackBarHostState = remember {
         SnackbarHostState()
@@ -75,60 +70,57 @@ fun SignUpScreen(
     Scaffold(
         snackbarHost = {
             SnackbarHost(snackBarHostState)
+        },
+        content = { scaffoldPadding ->
+            SignUpScreenContent(
+                modifier = modifier.padding(scaffoldPadding),
+                snackBarHostState = snackBarHostState,
+                signUpState = signUpState,
+                updateState = updateState,
+                signUpClicked = signUpClicked,
+                navigateToSignIn = navigateToSignIn,
+            )
         }
-    ) {
-        SignUpScreenContent(
-            navController = navController,
-            viewModel = viewModel,
-            snackbarHostState = snackBarHostState
-        )
-    }
+    )
 
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpScreenContent(
-    navController: NavController,
-    viewModel: NetworkViewModel,
-    snackbarHostState: SnackbarHostState,
+private fun SignUpScreenContent(
+    modifier: Modifier,
+    snackBarHostState: SnackbarHostState,
+    signUpState: OnboardingUIState,
+    updateState: (OnboardingUIState) -> Unit,
+    signUpClicked: () -> Unit,
+    navigateToSignIn:() -> Unit,
 ) {
 
-    var userName by remember {
-        mutableStateOf("")
-    }
-    var email by remember {
-        mutableStateOf("")
-    }
-    var password by remember {
-        mutableStateOf("")
-    }
-    val btnEnabled by remember {
-        derivedStateOf {
-            email.isNotEmpty() && password.isNotEmpty() && userName.isNotEmpty()
+
+    val keyboard = LocalSoftwareKeyboardController.current
+
+    val onSignUpClicked = remember {
+        {
+            keyboard?.hide()
+            signUpClicked()
         }
     }
 
-    val signUpFlow = viewModel.signUpFlow.collectAsState().value
-
-
-    val focusManager = LocalFocusManager.current
     LazyColumn(
-        modifier = Modifier
-            .padding(top = 24.dp)
+        modifier = modifier
+            .padding(12.dp)
             .fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.SpaceEvenly,
     ) {
         item {
 
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(),
+                    .padding(5.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.Center,
             ) {
                 Text(
                     text = "Welcome on board !",
@@ -142,6 +134,12 @@ fun SignUpScreenContent(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
+
+                if (signUpState.onBoardingError != null)
+                    Text(
+                        text = signUpState.onBoardingError,
+                        color = MaterialTheme.colorScheme.error
+                    )
             }
         }
 
@@ -149,11 +147,10 @@ fun SignUpScreenContent(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 32.dp),
-                horizontalAlignment = Alignment.Start
+                    .padding(5.dp),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Center,
             ) {
-                if (!btnEnabled)
-                    Text(text = "Fields cannot be empty")
 
                 Text(
                     text = "User Name",
@@ -163,11 +160,13 @@ fun SignUpScreenContent(
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 RoundedTextField(
-                    value = userName,
+                    value = signUpState.user.userName,
                     label = "User Name",
                     icon = Icons.Outlined.Person,
-                    modifier = Modifier.fillMaxWidth(),
-                    onValueChange = { userName = it }
+                    onValueChange = {
+                        updateState(signUpState.copy(user = signUpState.user.copy(userName = it)))
+                    },
+                    hasError = signUpState.onBoardingError!=null
                 )
             }
         }
@@ -187,11 +186,13 @@ fun SignUpScreenContent(
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 RoundedTextField(
-                    value = email,
+                    value = signUpState.user.email,
                     label = "Email",
                     icon = Icons.Outlined.Email,
-                    modifier = Modifier.fillMaxWidth(),
-                    onValueChange = { email = it }
+                    onValueChange = {
+                        updateState(signUpState.copy(user = signUpState.user.copy(email = it)))
+                    },
+                    hasError = signUpState.onBoardingError!=null
                 )
             }
         }
@@ -214,9 +215,10 @@ fun SignUpScreenContent(
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 TextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    modifier = Modifier.fillMaxWidth(),
+                    value = signUpState.user.password,
+                    onValueChange = {
+                        updateState(signUpState.copy(user = signUpState.user.copy(password = it)))
+                    },
                     label = {
                         Text(
                             text = "Password",
@@ -242,14 +244,14 @@ fun SignUpScreenContent(
                         imeAction = ImeAction.Done
                     ),
                     keyboardActions = KeyboardActions(
-                        onNext = {
-                            focusManager.moveFocus(FocusDirection.Next)
+                        onDone = {
+                            keyboard?.hide()
                         }
                     ),
-                    colors = TextFieldDefaults.textFieldColors(
+                    colors = TextFieldDefaults.colors(
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent
+                        disabledIndicatorColor = Color.Transparent,
                     ),
                     shape = MaterialTheme.shapes.medium,
                     maxLines = 1,
@@ -261,82 +263,63 @@ fun SignUpScreenContent(
         item {
             CustomRoundedButton(
                 label = "Sign Up",
-                enabled = btnEnabled,
-                modifier = Modifier
-                    .fillMaxWidth(),
+                enabled = signUpState.isButtonEnabled,
                 filled = true,
-                onClick = {
-                    val authRequest = AuthRequest(
-                        email = email,
-                        password = password,
-                        userName = userName,
-                    )
-                    viewModel.signUp(authRequest = authRequest)
-
-                })
+                onClick = onSignUpClicked
+            )
         }
 
         item {
-            Spacer(modifier = Modifier.padding(top = 10.dp))
+            Spacer(modifier = modifier.height(10.dp))
             Box(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
                 Row(
                     horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         text = "Already have an account?",
                         style = TextStyle(
-                            fontSize = 14.sp,
+                            fontSize = 16.sp,
                             fontWeight = FontWeight(200),
                             color = MaterialTheme.colorScheme.onPrimary,
                         )
                     )
-                    Spacer(modifier = Modifier.padding(horizontal = 2.dp))
-                    Text(
-                        text = "Sign In",
-                        modifier = Modifier.clickable {
-                            navController.navigate(NestedNavItem.SignInScreen.route)
-                        },
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight(500),
-                            color = MaterialTheme.colorScheme.onPrimary,
-                        )
+                    Spacer(modifier = modifier.width(2.dp))
+                    TextButton(
+                        onClick = navigateToSignIn,
+                        content = {
+                            Text(
+                                text = "Sign In",
+                                style = TextStyle(
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight(500),
+                                    color = MaterialTheme.colorScheme.onPrimary,
+                                )
+                            )
+                        }
                     )
                 }
             }
         }
 
         item {
-            signUpFlow.let {
-                when (it) {
-                    is NetworkResult.Error -> {
-                        LaunchedEffect(snackbarHostState) {
-                            snackbarHostState.showSnackbar("an error occured")
-                        }
-                    }
-
-                    is NetworkResult.Loading -> {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    }
-
-                    is NetworkResult.Success -> {
-                        navController.navigate(NestedNavItem.SignInScreen.route)
-                        LaunchedEffect(snackbarHostState) {
-                            snackbarHostState.showSnackbar("sign up successful")
-                        }
-                    }
-
-                    else -> {}
+            if (signUpState.isLoading) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
                 }
+            }
 
+            if (signUpState.isOnBoardingSuccess) {
+                LaunchedEffect(snackBarHostState) {
+                    snackBarHostState.showSnackbar("Sign Up Successful")
+                }
+                navigateToSignIn()
             }
         }
     }

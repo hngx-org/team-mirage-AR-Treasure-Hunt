@@ -10,9 +10,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -20,6 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -36,12 +39,14 @@ import com.shegs.artreasurehunt.ui.common.AnnotatedText
 import com.shegs.artreasurehunt.ui.common.CustomTopBar
 import com.shegs.artreasurehunt.ui.common.MenuDialogButton
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
     emailAddress: String,
+    userName: String,
+    email:String,
     onSignOutClick: () -> Unit,
+    onDeleteAccount: () -> Unit,
     onBack: () -> Unit,
 ) {
 
@@ -90,6 +95,7 @@ fun ProfileScreen(
                                         textAlign = TextAlign.Center
                                     )
                                     AnnotatedText(title = "Email Address", description = emailAddress)
+                                    AnnotatedText(title = "User Name", description = userName)
                                     Spacer(modifier = modifier.height(12.dp))
                                     MenuDialogButton(
                                         onButtonClick = onSignOutClick,
@@ -97,6 +103,20 @@ fun ProfileScreen(
                                         icon = {
                                             Image(
                                                 painter = painterResource(id = R.drawable.logout),
+                                                contentDescription = "",
+                                                modifier = modifier.size(40.dp)
+                                            )
+                                        }
+                                    )
+                                    MenuDialogButton(
+                                        onButtonClick = onDeleteAccount,
+                                        stringId = R.string.delete,
+                                        containerColor = MaterialTheme.colorScheme.error,
+                                        contentColor = Color.White,
+                                        icon = {
+                                            Image(
+                                                imageVector = Icons.Default.Delete,
+                                                colorFilter = ColorFilter.tint(color = Color.White),
                                                 contentDescription = "",
                                                 modifier = modifier.size(40.dp)
                                             )

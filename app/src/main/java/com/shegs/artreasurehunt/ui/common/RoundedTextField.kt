@@ -1,5 +1,6 @@
 package com.shegs.artreasurehunt.ui.common
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -18,14 +19,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun RoundedTextField(
     value: String,
     label: (String),
     icon: ImageVector,
     modifier: Modifier = Modifier,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    hasError: Boolean,
 ) {
 
     val focsManager = LocalFocusManager.current
@@ -33,7 +35,7 @@ fun RoundedTextField(
     TextField(
         value = value,
         onValueChange = { onValueChange(it) },
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         label = {
             Text(
                 text = label,
@@ -53,13 +55,14 @@ fun RoundedTextField(
                 focsManager.moveFocus(FocusDirection.Next)
             }
         ),
-        colors = TextFieldDefaults.textFieldColors(
+        colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent
+            disabledIndicatorColor = Color.Transparent,
         ),
         shape = MaterialTheme.shapes.medium,
         maxLines = 1,
         singleLine = true,
+        isError = hasError,
     )
 }

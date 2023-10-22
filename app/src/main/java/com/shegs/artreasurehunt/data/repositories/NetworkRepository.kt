@@ -1,8 +1,7 @@
 package com.shegs.artreasurehunt.data.repositories
 
-import com.google.firebase.auth.AuthResult
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -10,68 +9,117 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.ktx.Firebase
 import com.shegs.artreasurehunt.data.models.ArenaModel
 import com.shegs.artreasurehunt.data.models.User
-import com.shegs.artreasurehunt.data.network.request_and_response_models.AuthRequest
 import com.shegs.artreasurehunt.data.network.request_and_response_models.NetworkResult
-import com.shegs.artreasurehunt.data.utils.await
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 const val ARENAS_COLLECTION_REF = "arenas"
+
 class NetworkRepository @Inject constructor(
-    private val firebaseAuth: FirebaseAuth,
+    val firebaseAuth: FirebaseAuth,
     firestore: FirebaseFirestore
 ) {
 
-    private val arenasRef: CollectionReference = firestore.collection(ARENAS_COLLECTION_REF)
+    private val arenasDB: CollectionReference = firestore.collection(ARENAS_COLLECTION_REF)
 
 
-    val currentUser: FirebaseUser?
-        get() = firebaseAuth.currentUser
+    var userData: User? = null
 
-    private var userData: User? = null
+    private val documentId = arenasDB.document().id
 
+    suspend fun signUp(
+        user: User,
+        onComplete: (Boolean) -> Unit,
+    ) = withContext(Dispatchers.IO) {
+        val authResult =
+            firebaseAuth.createUserWithEmailAndPassword(user.email, user.password).await()
 
-    suspend fun signUp(authRequest: AuthRequest): AuthResult = withContext(Dispatchers.IO) {
-        val result = firebaseAuth.createUserWithEmailAndPassword(
-            authRequest.email,
-            authRequest.password
-        ).await()
-        val user = result.user
-        if (user != null) {
+        if (authResult.user != null) {
             userData = User(
-                id = user.uid,
-                email = authRequest.email,
-                userName = authRequest.userName,
+                id = authResult.user!!.uid,
+                email = user.email,
+                userName = user.userName,
+                password = user.password,
             )
-            arenasRef.document(result.user!!.uid).set(userData!!).await()
+
+            // Save user data to Firestore
+            val userDocumentRef = arenasDB.document(authResult.user!!.uid)
+            userDocumentRef.set(userData!!).await()
+
+            onComplete(true) // Signal success after both signup and data save
+        } else {
+            onComplete(false)
         }
-        return@withContext result
+
+        Log.i("NetworkRepo", "UserSignUP =$userData")
     }
 
-    suspend fun login(authRequest: AuthRequest): AuthResult = withContext(Dispatchers.IO) {
-        firebaseAuth.signInWithEmailAndPassword(authRequest.email, authRequest.password)
+    suspend fun getSignUpDetails(userId: String): User? {
+        return try {
+            Log.i("NetworkRepo,", "UserIDetails =$userId")
+            val userSnapshot = arenasDB
+                .document(userId)
+                .get()
+                .await()
+            Log.i("NetworkRepo,", "UserIDetails2 =${userSnapshot.toObject(User::class.java)}")
+            userSnapshot.toObject(User::class.java)
+
+        } catch (exception: Exception) {
+            // Toast.makeText(context,"${exception.cause?.message}", Toast.LENGTH_SHORT).show()
+            null
+        }
+    }
+
+
+    suspend fun login(
+        user: User,
+        onComplete: (Boolean) -> Unit,
+    ) = withContext(Dispatchers.IO) {
+        firebaseAuth.signInWithEmailAndPassword(user.email, user.password).addOnCompleteListener {
+            if (it.isSuccessful) {
+                onComplete(true)
+            } else {
+                onComplete(false)
+            }
+        }
             .await()
-
+        Log.i("NetworkRepo,", "Userlogin =${firebaseAuth.currentUser?.uid}")
+        Log.i("NetworkRepo,", "User2 =$user")
     }
+
 
     fun signOut() = Firebase.auth.signOut()
 
+    fun deleteAccount(onComplete: (Boolean) -> Unit) {
+        arenasDB
+            .document(Firebase.auth.currentUser!!.uid)
+            .delete()
+        Firebase.auth.currentUser?.delete()?.addOnCompleteListener {
+            if (it.isSuccessful){
+                onComplete(true)
+            }else{
+                onComplete(false)
+            }
+        }
+    }
+
     fun saveArena(arena: ArenaModel) {
-        val documentId = arenasRef.document().id
-        arenasRef
+        arenasDB
             .document(documentId)
             .set(arena)
     }
 
+    //get All Arenas
     suspend fun fetchArenas(): Flow<NetworkResult<List<ArenaModel>>> = callbackFlow {
         var snapShotListener: ListenerRegistration? = null
 
         try {
-            snapShotListener = arenasRef
+            snapShotListener = arenasDB
                 .addSnapshotListener { snapShot, error ->
                     val response = if (snapShot != null) {
                         val arenas = snapShot.toObjects(ArenaModel::class.java)
@@ -91,4 +139,43 @@ class NetworkRepository @Inject constructor(
             snapShotListener?.remove()
         }
     }
+
+    //get One Arena
+    fun getArena(
+        arenaId: String,
+        onError: (Throwable?) -> Unit,
+        onSuccess: (ArenaModel?) -> Unit,
+    ) {
+        arenasDB
+            .document(arenaId)
+            .get()
+            .addOnSuccessListener { arenaSnapshot ->
+                onSuccess(arenaSnapshot.toObject(ArenaModel::class.java))
+            }
+            .addOnFailureListener { exception ->
+                onError(exception.cause)
+            }
+    }
+
+    //updateArena
+    fun updateArena(
+        arena: ArenaModel,
+        onResult: (Boolean) -> Unit,
+    ) {
+        val updateArenaData = hashMapOf<String, Any>(
+            "name" to arena.arenaName,
+            "location" to arena.arenaLocation,
+            "description" to arena.arenaDesc,
+            "image" to arena.imageResId
+        )
+
+        arenasDB
+            .document(arena.id)
+            .update(updateArenaData)
+            .addOnCompleteListener {
+                onResult(it.isSuccessful)
+            }
+    }
+
+
 }

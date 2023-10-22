@@ -17,4 +17,5 @@
 
     <!-- Profile Screen -->
     <string name="sign_out">Sign Out</string>
+    <string name="delete">Delete Account</string>
 </resources>
