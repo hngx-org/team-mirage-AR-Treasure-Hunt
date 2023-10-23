@@ -27,7 +27,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.logging.Handler
 import javax.inject.Inject
 import kotlin.math.cos
 import kotlin.math.sin
@@ -47,6 +46,17 @@ class MapViewModel @Inject constructor(
     private val _isWithinGeoFence = MutableStateFlow(false)
     val isWithinGeofence = _isWithinGeoFence.asStateFlow()
 
+    private val _foundTreasuresCount = MutableStateFlow(0)
+    val foundTreasuresCount = _foundTreasuresCount.asStateFlow()
+
+    private val _totalTreasuresCount = MutableStateFlow(treasureHuntCircles?.size)
+    val totalTreasuresCount = _totalTreasuresCount.asStateFlow()
+
+    private val _userScore = MutableStateFlow(0)
+    val userScore = _userScore.asStateFlow()
+
+    private val _foundTreasureCircle: MutableStateFlow<TreasureCircleData?> = MutableStateFlow(null)
+
     fun processEvent(event: PermissionEvent, context: Context) {
         when (event) {
             is PermissionEvent.Granted -> {
@@ -59,7 +69,7 @@ class MapViewModel @Inject constructor(
                         treasureHuntCircles?.forEach { treasureCircle ->
                             checkForGeoFenceEntry(
                                 userLocationLatLng = location,
-                                geoFenceLatLng = treasureCircle.center,
+                                geoFenceData = treasureCircle,
                                 context = context
                             )
                         }
@@ -129,12 +139,13 @@ class MapViewModel @Inject constructor(
 
     private fun checkForGeoFenceEntry(
         userLocationLatLng: LatLng?,
-        geoFenceLatLng: LatLng,
+        geoFenceData: TreasureCircleData,
         radius: Double = GEOFENCE_RADIUS,
         context: Context,
     ) {
+
         val distanceInMeters =
-            SphericalUtil.computeDistanceBetween(userLocationLatLng, geoFenceLatLng)
+            SphericalUtil.computeDistanceBetween(userLocationLatLng, geoFenceData.center)
 
         if (distanceInMeters < radius) {
             //Todo add broadcast receiver
@@ -143,6 +154,7 @@ class MapViewModel @Inject constructor(
                 Toast.makeText(context, "Within GeoFence", Toast.LENGTH_LONG).show()
                 _isWithinGeoFence.update { true }
             }, 20000)
+            _foundTreasureCircle.update { geoFenceData }
         }
 
     }
@@ -197,4 +209,15 @@ class MapViewModel @Inject constructor(
         }
         return treasureData
     }
+
+    fun updateGameState() {
+        viewModelScope.launch {
+            _userScore.value = _userScore.value + 50
+            treasureHuntCircles?.toMutableList()?.remove(_foundTreasureCircle.value)
+            _totalTreasuresCount.update { treasureHuntCircles?.size }
+            _foundTreasuresCount.value = _foundTreasuresCount.value + 1
+            _foundTreasureCircle.update { null }
+        }
+    }
+
 }

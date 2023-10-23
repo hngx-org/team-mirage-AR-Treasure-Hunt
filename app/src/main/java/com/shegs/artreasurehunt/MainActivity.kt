@@ -15,7 +15,6 @@ import com.google.firebase.FirebaseApp
 import com.shegs.artreasurehunt.navigation.Navigation
 import com.shegs.artreasurehunt.ui.theme.ARTreasureHuntTheme
 import com.shegs.artreasurehunt.viewmodels.ArenaViewModel
-import com.shegs.artreasurehunt.viewmodels.NetworkViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -23,8 +22,6 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
 
 
-    @Inject
-    lateinit var networkViewModel: NetworkViewModel
 
     @Inject
     lateinit var arenaViewModel: ArenaViewModel
@@ -47,7 +44,6 @@ class MainActivity : ComponentActivity() {
                 ) {
                     Navigation(
                         navController = navController,
-                        networkViewModel = networkViewModel,
                         arenaViewModel = arenaViewModel,
                         settingsViewModel = hiltViewModel()
                     )
