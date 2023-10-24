@@ -28,7 +28,7 @@ class NetworkRepository @Inject constructor(
     private val arenasDB: CollectionReference = firestore.collection(ARENAS_COLLECTION_REF)
 
 
-    var userData: User? = null
+    private var userData: User? = null
 
     private val documentId = arenasDB.document().id
 
@@ -47,9 +47,7 @@ class NetworkRepository @Inject constructor(
                 password = user.password,
             )
 
-            // Save user data to Firestore
-           // val userDocumentRef = arenasDB.document(authResult.user!!.uid)
-          //  userDocumentRef.set(userData!!).await()
+            arenasDB.document(authResult.user!!.uid).set(userData!!).await()
 
             onComplete(true) // Signal success after both signup and data save
         } else {
@@ -86,8 +84,7 @@ class NetworkRepository @Inject constructor(
             } else {
                 onComplete(false)
             }
-        }
-            .await()
+        }.await()
         Log.i("NetworkRepo,", "Userlogin =${firebaseAuth.currentUser?.uid}")
         Log.i("NetworkRepo,", "User2 =$user")
     }
@@ -95,17 +92,17 @@ class NetworkRepository @Inject constructor(
 
     fun signOut() = Firebase.auth.signOut()
 
-    fun deleteAccount(onComplete: (Boolean) -> Unit) {
+    suspend fun deleteAccount(onComplete: (Boolean) -> Unit) {
         arenasDB
             .document(Firebase.auth.currentUser!!.uid)
             .delete()
         Firebase.auth.currentUser?.delete()?.addOnCompleteListener {
-            if (it.isSuccessful){
+            if (it.isSuccessful) {
                 onComplete(true)
-            }else{
+            } else {
                 onComplete(false)
             }
-        }
+        }?.await()
     }
 
     fun saveArena(arena: ArenaModel) {
@@ -138,43 +135,6 @@ class NetworkRepository @Inject constructor(
         awaitClose {
             snapShotListener?.remove()
         }
-    }
-
-    //get One Arena
-    fun getArena(
-        arenaId: String,
-        onError: (Throwable?) -> Unit,
-        onSuccess: (ArenaModel?) -> Unit,
-    ) {
-        arenasDB
-            .document(arenaId)
-            .get()
-            .addOnSuccessListener { arenaSnapshot ->
-                onSuccess(arenaSnapshot.toObject(ArenaModel::class.java))
-            }
-            .addOnFailureListener { exception ->
-                onError(exception.cause)
-            }
-    }
-
-    //updateArena
-    fun updateArena(
-        arena: ArenaModel,
-        onResult: (Boolean) -> Unit,
-    ) {
-        val updateArenaData = hashMapOf<String, Any>(
-            "name" to arena.arenaName,
-            "location" to arena.arenaLocation,
-            "description" to arena.arenaDesc,
-            "image" to arena.imageResId
-        )
-
-        arenasDB
-            .document(arena.id)
-            .update(updateArenaData)
-            .addOnCompleteListener {
-                onResult(it.isSuccessful)
-            }
     }
 
 

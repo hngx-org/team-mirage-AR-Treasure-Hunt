@@ -189,7 +189,7 @@ fun CreateArenaDialog(
                                     id = UUID.randomUUID().toString(),
                                     arenaName = arenaName,
                                     arenaDesc = arenaDescription,
-                                    arenaLocation = arenaLocation.toDouble(),
+                                    arenaLocation = arenaLocation,
                                     imageResId = randomImageResId // Provide a default image
                                 )
                                 viewModel.createArena(newArena)
