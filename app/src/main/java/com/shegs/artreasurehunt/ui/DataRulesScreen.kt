@@ -23,7 +23,6 @@ import com.shegs.artreasurehunt.R
 import com.shegs.artreasurehunt.ui.common.AnnotatedText
 import com.shegs.artreasurehunt.ui.common.CustomTopBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DataRulesScreen(
     modifier: Modifier = Modifier,

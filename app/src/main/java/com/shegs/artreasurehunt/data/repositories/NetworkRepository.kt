@@ -28,7 +28,7 @@ class NetworkRepository @Inject constructor(
     private val arenasDB: CollectionReference = firestore.collection(ARENAS_COLLECTION_REF)
 
 
-    private var userData: User? = null
+    var userData: User? = null
 
     private val documentId = arenasDB.document().id
 

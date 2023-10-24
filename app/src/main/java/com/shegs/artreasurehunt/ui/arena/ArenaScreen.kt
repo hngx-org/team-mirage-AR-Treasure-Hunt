@@ -1,8 +1,6 @@
 package com.shegs.artreasurehunt.ui.arena
 
 import android.annotation.SuppressLint
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -20,21 +18,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -44,7 +35,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -69,17 +59,14 @@ import com.skydoves.balloon.BalloonSizeSpec
 import com.skydoves.balloon.compose.Balloon
 import com.skydoves.balloon.compose.rememberBalloonBuilder
 
-@RequiresApi(Build.VERSION_CODES.Q)
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun ArenaScreen(
     arenaViewModel: ArenaViewModel,
     navController: NavController
 ) {
-
-    // Collect the list of arenas from the ArenaViewModel
-    val arenas: List<ArenaModel> by arenaViewModel.arenas.collectAsState(emptyList())
 
     var isCreateDialogVisible by remember { mutableStateOf(false) }
 
@@ -92,7 +79,7 @@ fun ArenaScreen(
             )
         }
     ) {
-        ArenaListScreen(arenas, arenaViewModel, navController)
+        ArenaListScreen(arenaViewModel, navController)
     }
 
     if (isCreateDialogVisible) {
@@ -103,10 +90,9 @@ fun ArenaScreen(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.Q)
+
 @Composable
 fun ArenaListScreen(
-    arenas: List<ArenaModel>,
     viewModel: ArenaViewModel,
     navController: NavController
 ) {
@@ -128,7 +114,7 @@ fun ArenaListScreen(
         }
 
         is NetworkResult.Success -> {
-            val arenas = (arenasResource as NetworkResult.Success<List<ArenaModel>>).data
+            val arenas = arenasResource.data
 
             if (arenas.isNullOrEmpty()) {
                 // Show a message when no arenas are available
@@ -146,7 +132,7 @@ fun ArenaListScreen(
                     )
                     LazyColumn {
                         items(arenas) { arena ->
-                            ArenaItem(arena, viewModel, navController)
+                            ArenaItem(arena, navController)
                         }
                     }
                 }
@@ -155,7 +141,7 @@ fun ArenaListScreen(
 
         is NetworkResult.Error -> {
             // Handle the error case
-            Text("Error: ${(arenasResource as NetworkResult.Error).throwable?.message ?: "Arenas Not Found"}")
+            Text(arenasResource.throwable?.message ?: "Arenas Not Found")
         }
     }
 
@@ -164,11 +150,10 @@ fun ArenaListScreen(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.Q)
+
 @Composable
 fun ArenaItem(
     arena: ArenaModel,
-    arenaViewModel: ArenaViewModel,
     navController: NavController
 ) {
 
@@ -211,7 +196,7 @@ fun ArenaItem(
                 )
 
                 Text(
-                    text = "${arena.arenaName}",
+                    text = arena.arenaName,
                     textAlign = TextAlign.Start,
                     color = Color.White,
                     maxLines = 1,
@@ -234,7 +219,7 @@ fun ArenaItem(
                 )
 
                 Text(
-                    text = "${arena.arenaDesc}",
+                    text = arena.arenaDesc,
                     textAlign = TextAlign.Start,
                     color = Color.White,
                     maxLines = 3,
@@ -258,7 +243,7 @@ fun ArenaItem(
                 )
 
                 Text(
-                    text = "${arena.arenaLocation}",
+                    text = arena.arenaLocation,
                     textAlign = TextAlign.Start,
                     color = Color.White,
                     maxLines = 2,

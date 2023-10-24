@@ -6,9 +6,9 @@ package com.shegs.artreasurehunt.ui.common
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,11 +34,14 @@ fun AppTextField(
     placeholderComposable: @Composable (() -> Unit)? = {},
     onValueChanged: (String?) -> Unit
 ) {
+    val containerColor1 = containerColor ?: grey2
     OutlinedTextField(
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            containerColor = containerColor ?: grey2,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = containerColor1,
+            unfocusedContainerColor = containerColor1,
+            disabledContainerColor = containerColor1,
+            focusedBorderColor = md_theme_light_onPrimary,
             unfocusedBorderColor = md_theme_light_onPrimary,
-            focusedBorderColor = md_theme_light_onPrimary
         ),
         placeholder = {
             if (placeholderComposable != null) {

@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.LibraryBooks
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.LibraryBooks
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -100,7 +100,7 @@ fun HomeMenuDialog(
                                 stringId = R.string.data_rules,
                                 icon = {
                                     Image(
-                                        imageVector = Icons.Default.LibraryBooks,
+                                        imageVector = Icons.AutoMirrored.Filled.LibraryBooks,
                                         contentDescription = "",
                                         colorFilter = ColorFilter.tint(
                                             color = Color(

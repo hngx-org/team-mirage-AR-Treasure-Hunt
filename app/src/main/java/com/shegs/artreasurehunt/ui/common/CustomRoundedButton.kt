@@ -1,6 +1,7 @@
 package com.shegs.artreasurehunt.ui.common
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -15,7 +16,7 @@ import androidx.compose.ui.unit.dp
 fun CustomRoundedButton(
     label: String,
     modifier: Modifier = Modifier,
-    enabled: Boolean?,
+    enabled: Boolean = false,
     filled: Boolean = false,
     onClick: () -> Unit
 ) {
@@ -40,8 +41,8 @@ fun CustomRoundedButton(
 
     Button(
         onClick = onClick,
-        modifier = modifier,
-        enabled = enabled!!,
+        modifier = modifier.fillMaxWidth(),
+        enabled = enabled,
         shape = MaterialTheme.shapes.medium,
         colors = ButtonDefaults.buttonColors(
             containerColor = containerColor,
