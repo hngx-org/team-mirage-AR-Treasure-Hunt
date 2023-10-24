@@ -17,8 +17,4 @@
 
     <!-- Profile Screen -->
     <string name="sign_out">Sign Out</string>
-    <string name="delete">Delete Account</string>
-
-    <!-- Congrats Screen -->
-    <string name="go_nxt_loc">Go next Location</string>
 </resources>

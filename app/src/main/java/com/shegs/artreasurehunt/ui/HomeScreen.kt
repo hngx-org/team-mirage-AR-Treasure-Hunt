@@ -40,7 +40,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -48,12 +50,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.navigation.NavController
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.shegs.artreasurehunt.R
+import com.shegs.artreasurehunt.navigation.NestedNavItem
 import com.shegs.artreasurehunt.ui.common.bounceClick
 import kotlinx.coroutines.delay
 
@@ -82,24 +86,44 @@ fun getVideoUri(context: Context): Uri {
     return Uri.parse(videoUri)
 }
 
-@SuppressLint("UnusedContentLambdaTargetStateParameter", "RememberReturnType", "OpaqueUnitKey")
+@SuppressLint("UnusedContentLambdaTargetStateParameter", "RememberReturnType")
 @Composable
 fun HomeScreen(
+    navController: NavController,
     videoUri: Uri,
     hasSound: Boolean,
     volume: Float,
-    onProfileClick: () -> Unit,
-    onLeaderBoardClick: () -> Unit,
-    onSettingsClick: () -> Unit,
-    onDataRulesClick: () -> Unit,
-    onStartHuntingClick: () -> Unit,
 ) {
 
     val context = LocalContext.current
+    val passwordFocusRequester = FocusRequester()
+    val focusManager = LocalFocusManager.current
     val exoPlayer = remember { context.buildExoPlayer(videoUri) }
     val mediaPlayer: MediaPlayer = MediaPlayer.create(context, R.raw.home_music)
 
+    val onProfileClick = remember {
+        {
+            navController.navigate(NestedNavItem.ProfileScreen.route)
+        }
+    }
 
+    val onLeaderBoardClick = remember {
+        {
+            navController.navigate(NestedNavItem.LeaderBoardScreen.route)
+        }
+    }
+
+    val onSettingsClick = remember {
+        {
+            navController.navigate(NestedNavItem.SettingsScreen.route)
+        }
+    }
+
+    val onDataRulesClick = remember {
+        {
+            navController.navigate(NestedNavItem.DataRulesScreen.route)
+        }
+    }
 
     DisposableEffect(
         AndroidView(
@@ -177,7 +201,7 @@ fun HomeScreen(
                 )
 
                 Button(
-                    onClick = onStartHuntingClick,
+                    onClick = { navController.navigate(NestedNavItem.ArenaScreen.route) },
                     modifier = Modifier.padding(8.dp),
                     shape = MaterialTheme.shapes.medium,
                     colors = ButtonDefaults.buttonColors(
