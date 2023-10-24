@@ -1,5 +1,5 @@
-package com.shegs.artreasurehunt.ui
-
+//import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -20,6 +19,7 @@ import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -27,19 +27,21 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -48,19 +50,22 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.shegs.artreasurehunt.data.network.request_and_response_models.AuthRequest
+import com.shegs.artreasurehunt.data.network.request_and_response_models.NetworkResult
+import com.shegs.artreasurehunt.navigation.NestedNavItem
 import com.shegs.artreasurehunt.ui.common.CustomRoundedButton
 import com.shegs.artreasurehunt.ui.common.RoundedTextField
-import com.shegs.artreasurehunt.ui.states.OnboardingUIState
+import com.shegs.artreasurehunt.viewmodels.NetworkViewModel
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreen(
-    modifier: Modifier = Modifier,
-    signInState: OnboardingUIState,
-    updateState: (OnboardingUIState) -> Unit,
-    signInClicked: () -> Unit,
-    navigateToHome: () -> Unit,
-    navigateToSignUp: () -> Unit,
+    navController: NavController,
+    viewModel: NetworkViewModel = hiltViewModel(),
 ) {
     val snackBarHostState = remember {
         SnackbarHostState()
@@ -68,60 +73,58 @@ fun SignInScreen(
     Scaffold(
         snackbarHost = {
             SnackbarHost(snackBarHostState)
-        },
-        content = { innerPadding ->
-            SignInScreenContent(
-                modifier = modifier.padding(
-                    top = innerPadding.calculateTopPadding(),
-                    bottom = innerPadding.calculateBottomPadding()
-                ),
-                snackBarHostState = snackBarHostState,
-                signInState = signInState,
-                updateState = updateState,
-                signInClicked = signInClicked,
-                navigateToHome = navigateToHome,
-                navigateToSignUp = navigateToSignUp,
-            )
         }
-    )
+    ) { innerPadding ->
+        SignInScreenContent(
+//            state = state,
+//            onEvent = viewModel::onEvent,
+            navController = navController,
+            modifier = Modifier.padding(
+                top = innerPadding.calculateTopPadding(),
+                bottom = innerPadding.calculateBottomPadding()
+            ),
+            viewModel = viewModel,
+            snackbarHostState = snackBarHostState
+        )
+    }
 }
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
-private fun SignInScreenContent(
+fun SignInScreenContent(
+    viewModel: NetworkViewModel,
+    navController: NavController,
     modifier: Modifier = Modifier,
-    snackBarHostState: SnackbarHostState,
-    signInState: OnboardingUIState,
-    updateState: (OnboardingUIState) -> Unit,
-    signInClicked: () -> Unit,
-    navigateToHome: () -> Unit,
-    navigateToSignUp: () -> Unit,
+    snackbarHostState: SnackbarHostState
 ) {
 
-    val hasError = signInState.onBoardingError != null
+    val loginFlow = viewModel.loginFlow.collectAsState().value
+    var email by remember {
+        mutableStateOf("")
+    }
+    var password by remember {
+        mutableStateOf("")
+    }
 
-
-    val keyboard = LocalSoftwareKeyboardController.current
-
-    val onSignInClicked = remember {
-        {
-            keyboard?.hide()
-            signInClicked()
+    val btnEnabled by remember {
+        derivedStateOf {
+            email.isNotEmpty() && password.isNotEmpty()
         }
     }
+
+    val focusManager = LocalFocusManager.current
     LazyColumn(
         modifier = modifier
-            .padding(12.dp)
             .fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.SpaceEvenly,
+        verticalArrangement = Arrangement.Center
     ) {
         item {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(5.dp),
+                    .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
                     text = "Welcome back !",
@@ -135,12 +138,6 @@ private fun SignInScreenContent(
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color(0xFFFFFFFF)
                 )
-
-                if (hasError)
-                    Text(
-                        text = signInState.onBoardingError ?: "Sign In Error",
-                        color = MaterialTheme.colorScheme.error
-                    )
             }
         }
 
@@ -148,10 +145,11 @@ private fun SignInScreenContent(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(5.dp),
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.Center,
+                    .padding(top = 50.dp),
+                horizontalAlignment = Alignment.Start
             ) {
+                if (!btnEnabled)
+                    Text(text = "Fields cannot be empty")
 
                 Text(
                     text = "Email Address",
@@ -161,13 +159,13 @@ private fun SignInScreenContent(
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 RoundedTextField(
-                    value = signInState.user.email,
+                    value = email,
                     label = "Email",
                     icon = Icons.Outlined.Email,
+                    modifier = Modifier.fillMaxWidth(),
                     onValueChange = {
-                        updateState(signInState.copy(user = signInState.user.copy(email = it)))
-                    },
-                    hasError = hasError
+                        email = it
+                    }
                 )
             }
         }
@@ -190,10 +188,8 @@ private fun SignInScreenContent(
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 TextField(
-                    value = signInState.user.password,
-                    onValueChange = {
-                        updateState(signInState.copy(user = signInState.user.copy(password = it)))
-                    },
+                    value = password,
+                    onValueChange = { password = it },
                     modifier = Modifier.fillMaxWidth(),
                     label = {
                         Text(
@@ -220,14 +216,14 @@ private fun SignInScreenContent(
                         imeAction = ImeAction.Done
                     ),
                     keyboardActions = KeyboardActions(
-                        onDone = {
-                            keyboard?.hide()
+                        onNext = {
+                            focusManager.moveFocus(FocusDirection.Next)
                         }
                     ),
-                    colors = TextFieldDefaults.colors(
+                    colors = TextFieldDefaults.textFieldColors(
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent
                     ),
                     shape = MaterialTheme.shapes.medium,
                     maxLines = 1,
@@ -240,64 +236,81 @@ private fun SignInScreenContent(
         item {
             CustomRoundedButton(
                 label = "Sign In",
-                enabled = signInState.isButtonEnabled,
+                enabled = btnEnabled,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 30.dp),
                 filled = true,
-                onClick = onSignInClicked
+                onClick = {
+                    val authRequest = AuthRequest(
+                        email = email, password = password
+                    )
+                    viewModel.login(authRequest)
+                }
             )
         }
 
         item {
-            Spacer(modifier = modifier.height(10.dp))
+            Spacer(modifier = Modifier.padding(top = 10.dp))
             Box(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
                 Row(
                     horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         text = "Don't have an account?",
                         style = TextStyle(
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             fontWeight = FontWeight(200),
                             color = MaterialTheme.colorScheme.onPrimary,
                         )
                     )
-                    Spacer(modifier = modifier.width(2.dp))
-                    TextButton(
-                        onClick = navigateToSignUp,
-                        content = {
-                            Text(
-                                text = "Register",
-                                style = TextStyle(
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight(500),
-                                    color = MaterialTheme.colorScheme.onPrimary,
-                                )
-                            )
-                        }
+                    Spacer(modifier = Modifier.padding(horizontal = 2.dp))
+                    Text(
+                        text = "Register",
+                        modifier = Modifier.clickable {
+                            navController.navigate(NestedNavItem.SignUpScreen.route)
+                        },
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight(500),
+                            color = MaterialTheme.colorScheme.onPrimary,
+                        )
                     )
                 }
             }
         }
 
         item {
+            loginFlow.let {
+                when (it) {
+                    is NetworkResult.Error -> {
+                        LaunchedEffect(snackbarHostState) {
+                            snackbarHostState.showSnackbar("login error")
+                        }
+                    }
 
-            if (signInState.isLoading) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
+                    is NetworkResult.Loading -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
 
-            if (signInState.isOnBoardingSuccess) {
-                LaunchedEffect(snackBarHostState) {
-                    snackBarHostState.showSnackbar("Login Successful")
+                    is NetworkResult.Success -> {
+                        LaunchedEffect(snackbarHostState) {
+                            navController.navigate(NestedNavItem.HomeScreen.route)
+                            snackbarHostState.showSnackbar("login successful")
+                        }
+                    }
+
+                    else -> {
+                    }
                 }
-                navigateToHome()
             }
         }
 
