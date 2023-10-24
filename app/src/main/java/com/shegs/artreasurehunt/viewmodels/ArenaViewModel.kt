@@ -17,7 +17,7 @@ class ArenaViewModel @Inject constructor(
     private val networkRepository: NetworkRepository
 ): ViewModel(){
 
-    val hasUser = networkRepository.firebaseAuth.currentUser
+    val hasUser = networkRepository.currentUser
     private val _arenas = MutableStateFlow<List<ArenaModel>>(emptyList())
     val arenas: StateFlow<List<ArenaModel>> = _arenas
 
