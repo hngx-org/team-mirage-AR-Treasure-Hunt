@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -40,6 +41,14 @@ fun GameScreen() {
         }
     }
     val isWithinGeofence = mapViewModel.isWithinGeofence.collectAsState().value
+    val currentTreasures = mapViewModel.foundTreasuresCount.collectAsState().value
+    val totalTreasures = mapViewModel.totalTreasuresCount.collectAsState().value
+    val userScore = mapViewModel.userScore.collectAsState().value
+    val goNextLocation = remember {
+        {
+            mapViewModel.updateGameState()
+        }
+    }
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -47,7 +56,11 @@ fun GameScreen() {
         ARCameraScreen(
             modifier = Modifier
                 .weight(1f),
-            isWithinGeoFence = isWithinGeofence
+            isWithinGeoFence = isWithinGeofence,
+            foundTreasures = currentTreasures,
+            totalTreasures = totalTreasures ?:0,
+            userScore = userScore,
+            updateGameStatus = goNextLocation
         )
         MapView(
             mapViewModel = mapViewModel, context = context,

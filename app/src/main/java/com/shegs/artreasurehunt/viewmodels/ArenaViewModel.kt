@@ -1,5 +1,6 @@
 package com.shegs.artreasurehunt.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shegs.artreasurehunt.R
@@ -17,7 +18,7 @@ class ArenaViewModel @Inject constructor(
     private val networkRepository: NetworkRepository
 ): ViewModel(){
 
-    val hasUser = networkRepository.currentUser
+    val hasUser = networkRepository.firebaseAuth.currentUser
     private val _arenas = MutableStateFlow<List<ArenaModel>>(emptyList())
     val arenas: StateFlow<List<ArenaModel>> = _arenas
 
@@ -36,11 +37,11 @@ class ArenaViewModel @Inject constructor(
 
     fun createArena(arena: ArenaModel){
         viewModelScope.launch {
-            val currentArenas = _arenas.value.toMutableList()
+            //val currentArenas = _arenas.value.toMutableList()
             val randomImageResId = arenaImages.random()
 
-            currentArenas.add(arena.copy(imageResId = randomImageResId))
-            _arenas.emit(currentArenas)
+           // currentArenas.add(arena.copy(imageResId = randomImageResId))
+            //_arenas.emit(currentArenas)
 
             //Save the arena to Firebase
             saveArenaToFirestore(arena.copy(imageResId = randomImageResId))
@@ -85,6 +86,7 @@ class ArenaViewModel @Inject constructor(
                  }
                  NetworkResult.Success(data = arenas)
                 _arenasFlow.value = arenas
+                 Log.i("ArenaVM","${arenas.data}")
             }
         }
     }
